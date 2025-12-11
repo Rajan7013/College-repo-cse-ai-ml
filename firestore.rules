@@ -1,0 +1,25 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Users collection
+    match /users/{userId} {
+      // Allow users to read and write their own document
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      
+      // Allow all authenticated users to read any user (for admin features)
+      allow read: if request.auth != null;
+    }
+    
+    // Resources collection  
+    match /resources/{resourceId} {
+      // Allow any authenticated user to read
+      allow read: if request.auth != null;
+      
+      // Allow any authenticated user to create/update/delete
+      // (We'll check admin role in the server-side code)
+      allow write: if request.auth != null;
+    }
+  }
+}

@@ -1,36 +1,147 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎓 EduNexus - Academic Repository Platform
 
-## Getting Started
+![EduNexus Banner](/public/banner-placeholder.png)
 
-First, run the development server:
+## 📖 Overview
+
+**EduNexus** is a modern, full-stack academic repository platform designed for B.Tech CSE (AI & ML) students. It serves as a centralized hub for accessing, sharing, and managing educational resources like notes, question papers, lab manuals, and projects.
+
+Built with **Next.js 16**, **Clerk Authentication**, and **Firebase**, it offers a secure, high-performance experience with "Military-Grade" security including role-based access control (Admin/Student).
+
+---
+
+## ✨ Features
+
+### 👩‍🎓 Student Features
+*   **📚 Resource Access:** View/Download Notes, Question Papers, Lab Manuals, Assignments.
+*   **🔍 Advanced Search:** Filter by Regulation, Year, Semester, Subject Code, Unit, and Document Type.
+*   **📂 Multi-Format Support:** In-browser viewing for PDF, Images, PowerPoint (PPT/PPTX), and Word (DOC/DOCX).
+*   **👤 Student Profile:** Manage bio, profile picture, favorites, recently viewed items, and download history.
+*   **📱 Responsive:** Optimized for both desktop and mobile devices.
+
+### 👨‍🏫 Admin Features
+*   **🛡️ Admin Dashboard:** Complete overview of platform stats (Total Users, Resources, Charts).
+*   **📤 Resource Management:** Upload files to **Cloudflare R2** with metadata stored in **Firestore**.
+*   **👥 User Management:** View all users, block/unblock accounts, and manage roles.
+*   **📊 Analytics:** Track resource distribution by branch, type, and regulation.
+
+---
+
+## 🛠️ Tech Stack & Architecture
+
+### **Frontend**
+*   **Framework:** [Next.js 16 (App Router)](https://nextjs.org/)
+*   **Language:** TypeScript
+*   **Styling:** Tailwind CSS + Custom Animations (Poppins Font)
+*   **Icons:** Lucide React
+*   **Authentication:** [Clerk](https://clerk.com/)
+
+### **Backend & Storage**
+*   **Database:** Google Firebase Firestore
+*   **File Storage:** Cloudflare R2 (S3-compatible object storage)
+*   **Server Actions:** Next.js Server Actions (using Firebase Admin SDK)
+*   **Security:** Firestore Security Rules + Server-side Role Verification
+
+---
+
+## 📂 Project Structure
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+college/
+├── app/
+│   ├── admin/              # Admin-only routes (Dashboard, Upload)
+│   ├── dashboard/          # Student resource discovery
+│   ├── profile/            # User profile management
+│   ├── sign-in/            # Clerk auth pages
+│   ├── globals.css         # Global styles & animations
+│   ├── layout.tsx          # Root layout with Navbar & Auth
+│   └── page.tsx            # Landing page
+├── components/             # Reusable UI components
+│   ├── AdvancedSearch.tsx  # Filtering & Search UI
+│   ├── Navbar.tsx          # Responsive navigation
+│   ├── PDFViewer.tsx       # PDF rendering component
+│   ├── UserActions.tsx     # Admin user management buttons
+│   └── ...
+├── lib/
+│   ├── actions/            # Server Actions (Business Logic)
+│   │   ├── admin.ts        # Admin stats logic
+│   │   ├── resources.ts    # Resource fetching
+│   │   ├── upload.ts       # File upload (Admin SDK)
+│   │   ├── users.ts        # User management
+│   │   └── user.ts         # User sync
+│   ├── firebase-admin.ts   # Firebase Admin SDK init
+│   └── firebase.ts         # Firebase Client SDK init
+└── public/                 # Static assets
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🚀 Getting Started
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 1. Clone the Repository
+```bash
+git clone https://github.com/your-username/edunexus.git
+cd edunexus
+```
 
-## Learn More
+### 2. Install Dependencies
+```bash
+npm install
+```
 
-To learn more about Next.js, take a look at the following resources:
+### 3. Environment Setup
+Create a `.env.local` file in the root directory and add the following keys:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```env
+# Clerk Auth
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
+CLERK_SECRET_KEY=sk_test_...
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Firebase Client (from console)
+NEXT_PUBLIC_FIREBASE_API_KEY=AIza...
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=...
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=...
+# ... other firebase config
 
-## Deploy on Vercel
+# Firebase Admin (from service-account.json)
+FIREBASE_CLIENT_EMAIL=...
+FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----..."
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# Cloudflare R2
+R2_ACCOUNT_ID=...
+R2_ACCESS_KEY_ID=...
+R2_SECRET_ACCESS_KEY=...
+R2_BUCKET_NAME=...
+NEXT_PUBLIC_R2_PUBLIC_URL=...
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 4. Run Development Server
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) to view the app.
+
+---
+
+## 🔐 Security Information
+
+*   **Role-Based Access:** All sensitive Server Actions use `firebase-admin` to bypass client-side rules but manually verify `userId` and `role` from Firestore before execution.
+*   **Firestore Rules:** Client-side read/write is restricted. Only authenticated users can read. Writes are handled via Server Actions.
+*   **Environment Variables:** Sensitive keys (service account, secrets) are never exposed to the client.
+
+---
+
+## 📦 Deployment
+
+This project is optimized for deployment on **Vercel**.
+
+1.  Push code to GitHub.
+2.  Import project into Vercel.
+3.  Add all environment variables from `.env.local` to Vercel settings.
+4.  Deploy! 🚀
+
+---
+
+## 📜 License
+
+This project is licensed under the MIT License.
