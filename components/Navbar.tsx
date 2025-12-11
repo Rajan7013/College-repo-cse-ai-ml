@@ -106,8 +106,8 @@ export default function Navbar() {
                         )}
                     </div>
 
-                    {/* Mobile Menu Button */}
-                    <div className="md:hidden">
+                    {/* Mobile Menu Button - Hidden to prefer Bottom Nav */}
+                    <div className="hidden">
                         <button
                             onClick={toggleMenu}
                             className="text-white p-2 rounded-md hover:bg-blue-500 transition-colors duration-200"

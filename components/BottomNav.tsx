@@ -28,50 +28,50 @@ export default function BottomNav() {
 
     return (
         <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 pb-safe">
-            <div className="flex justify-around items-center h-16">
+            <div className="flex justify-around items-center h-16" style={{ fontFamily: 'var(--font-poppins)' }}>
                 <Link
                     href="/"
-                    className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${isActive('/') ? 'text-blue-600' : 'text-gray-500'}`}
+                    className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${isActive('/') ? 'text-blue-600' : 'text-gray-400 hover:text-gray-600'}`}
                 >
-                    <Home className="h-6 w-6" />
-                    <span className="text-xs font-medium">Home</span>
+                    <Home className={`h-6 w-6 ${isActive('/') ? 'fill-current' : ''}`} />
+                    <span className="text-[10px] font-semibold tracking-wide">Home</span>
                 </Link>
 
                 {isSignedIn ? (
                     <>
                         <Link
                             href="/dashboard"
-                            className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${isActive('/dashboard') ? 'text-blue-600' : 'text-gray-500'}`}
+                            className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${isActive('/dashboard') ? 'text-blue-600' : 'text-gray-400 hover:text-gray-600'}`}
                         >
-                            <BookOpen className="h-6 w-6" />
-                            <span className="text-xs font-medium">Resources</span>
+                            <BookOpen className={`h-6 w-6 ${isActive('/dashboard') ? 'fill-current' : ''}`} />
+                            <span className="text-[10px] font-semibold tracking-wide">Resources</span>
                         </Link>
 
                         {userRole === 'admin' && (
                             <Link
                                 href="/admin/dashboard"
-                                className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${isActive('/admin/dashboard') ? 'text-blue-600' : 'text-gray-500'}`}
+                                className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${isActive('/admin/dashboard') ? 'text-blue-600' : 'text-gray-400 hover:text-gray-600'}`}
                             >
-                                <ShieldCheck className="h-6 w-6" />
-                                <span className="text-xs font-medium">Admin</span>
+                                <ShieldCheck className={`h-6 w-6 ${isActive('/admin/dashboard') ? 'fill-current' : ''}`} />
+                                <span className="text-[10px] font-semibold tracking-wide">Admin</span>
                             </Link>
                         )}
 
                         <Link
                             href="/profile"
-                            className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${isActive('/profile') ? 'text-blue-600' : 'text-gray-500'}`}
+                            className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${isActive('/profile') ? 'text-blue-600' : 'text-gray-400 hover:text-gray-600'}`}
                         >
-                            <User className="h-6 w-6" />
-                            <span className="text-xs font-medium">Profile</span>
+                            <User className={`h-6 w-6 ${isActive('/profile') ? 'fill-current' : ''}`} />
+                            <span className="text-[10px] font-semibold tracking-wide">Profile</span>
                         </Link>
                     </>
                 ) : (
                     <Link
                         href="/sign-in"
-                        className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${isActive('/sign-in') ? 'text-blue-600' : 'text-gray-500'}`}
+                        className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${isActive('/sign-in') ? 'text-blue-600' : 'text-gray-400 hover:text-gray-600'}`}
                     >
-                        <User className="h-6 w-6" />
-                        <span className="text-xs font-medium">Sign In</span>
+                        <User className={`h-6 w-6 ${isActive('/sign-in') ? 'fill-current' : ''}`} />
+                        <span className="text-[10px] font-semibold tracking-wide">Sign In</span>
                     </Link>
                 )}
             </div>
