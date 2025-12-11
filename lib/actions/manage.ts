@@ -1,8 +1,7 @@
 'use server';
 
 import { auth } from '@clerk/nextjs/server';
-import { db } from '@/lib/firebase';
-import { doc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { adminDb } from '@/lib/firebase-admin';
 import { r2Client, R2_BUCKET_NAME } from '@/lib/r2';
 import { DeleteObjectCommand } from '@aws-sdk/client-s3';
 
@@ -17,23 +16,22 @@ export async function deleteResource(resourceId: string): Promise<{ success: boo
         }
 
         // Check if user is admin
-        const userRef = doc(db, 'users', userId);
-        const userDoc = await getDoc(userRef);
+        const userDoc = await adminDb.collection('users').doc(userId).get();
 
-        if (!userDoc.exists() || userDoc.data().role !== 'admin') {
+        if (!userDoc.exists || userDoc.data()?.role !== 'admin') {
             return { success: false, message: 'Unauthorized: Admin access required' };
         }
 
         // Get resource to find file URL
-        const resourceRef = doc(db, 'resources', resourceId);
-        const resourceDoc = await getDoc(resourceRef);
+        const resourceRef = adminDb.collection('resources').doc(resourceId);
+        const resourceDoc = await resourceRef.get();
 
-        if (!resourceDoc.exists()) {
+        if (!resourceDoc.exists) {
             return { success: false, message: 'Resource not found' };
         }
 
         const resourceData = resourceDoc.data();
-        const fileUrl = resourceData.fileUrl;
+        const fileUrl = resourceData?.fileUrl;
 
         // Extract R2 key from URL
         if (fileUrl && process.env.NEXT_PUBLIC_R2_PUBLIC_URL) {
@@ -54,7 +52,7 @@ export async function deleteResource(resourceId: string): Promise<{ success: boo
         }
 
         // Delete from Firestore
-        await deleteDoc(resourceRef);
+        await resourceRef.delete();
 
         return { success: true, message: 'Resource deleted successfully' };
     } catch (error) {
@@ -88,22 +86,21 @@ export async function updateResource(
         }
 
         // Check if user is admin
-        const userRef = doc(db, 'users', userId);
-        const userDoc = await getDoc(userRef);
+        const userDoc = await adminDb.collection('users').doc(userId).get();
 
-        if (!userDoc.exists() || userDoc.data().role !== 'admin') {
+        if (!userDoc.exists || userDoc.data()?.role !== 'admin') {
             return { success: false, message: 'Unauthorized: Admin access required' };
         }
 
         // Update resource
-        const resourceRef = doc(db, 'resources', resourceId);
-        const resourceDoc = await getDoc(resourceRef);
+        const resourceRef = adminDb.collection('resources').doc(resourceId);
+        const resourceDoc = await resourceRef.get();
 
-        if (!resourceDoc.exists()) {
+        if (!resourceDoc.exists) {
             return { success: false, message: 'Resource not found' };
         }
 
-        await updateDoc(resourceRef, {
+        await resourceRef.update({
             ...data,
             updatedAt: new Date()
         });
