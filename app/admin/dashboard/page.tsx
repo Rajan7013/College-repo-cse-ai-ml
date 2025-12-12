@@ -3,8 +3,12 @@ import { getUserRole } from '@/lib/actions/resources';
 import { redirect } from 'next/navigation';
 import { BarChart3, Users, FileText, Upload, TrendingUp, Clock } from 'lucide-react';
 import Link from 'next/link';
+
 import DeleteButton from '@/components/DeleteButton';
 import UserManagementTable from '@/components/UserManagementTable';
+
+export const dynamic = 'force-dynamic';
+
 
 export default async function AdminDashboardPage() {
     const userRole = await getUserRole();
