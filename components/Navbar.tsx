@@ -31,24 +31,24 @@ export default function Navbar() {
     return (
         <nav className="bg-gradient-to-r from-blue-600 to-blue-700 shadow-lg sticky top-0 z-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between items-center h-16">
+                <div className="flex justify-between items-center h-14">
                     {/* Logo Section */}
-                    <div className="flex items-center space-x-3">
-                        <div className="bg-orange-500 p-2 rounded-lg shadow-md hover:bg-orange-600 transition-colors duration-300">
-                            <GraduationCap className="h-8 w-8 text-white" />
+                    <div className="flex items-center space-x-2">
+                        <div className="bg-orange-500 p-1.5 rounded-lg shadow-md hover:bg-orange-600 transition-colors duration-300">
+                            <GraduationCap className="h-6 w-6 text-white" />
                         </div>
                         <Link href="/" className="flex items-center">
-                            <span className="text-2xl font-bold text-white tracking-tight hover:text-orange-200 transition-colors duration-300">
+                            <span className="text-xl font-bold text-white tracking-tight hover:text-orange-200 transition-colors duration-300">
                                 EduNexus
                             </span>
                         </Link>
                     </div>
 
                     {/* Desktop Navigation */}
-                    <div className="hidden md:flex items-center space-x-8">
+                    <div className="hidden md:flex items-center space-x-6">
                         <Link
                             href="/"
-                            className="text-white font-medium hover:text-orange-300 transition-colors duration-200 px-3 py-2 rounded-md hover:bg-blue-500"
+                            className="text-white text-sm font-medium hover:text-orange-300 transition-colors duration-200 px-3 py-1.5 rounded-md hover:bg-blue-500"
                         >
                             Home
                         </Link>
@@ -57,13 +57,13 @@ export default function Navbar() {
                             <>
                                 <Link
                                     href="/dashboard"
-                                    className="text-white font-medium hover:text-orange-300 transition-colors duration-200 px-3 py-2 rounded-md hover:bg-blue-500"
+                                    className="text-white text-sm font-medium hover:text-orange-300 transition-colors duration-200 px-3 py-1.5 rounded-md hover:bg-blue-500"
                                 >
                                     Resources
                                 </Link>
                                 <Link
                                     href="/profile"
-                                    className="text-white font-medium hover:text-orange-300 transition-colors duration-200 px-3 py-2 rounded-md hover:bg-blue-500"
+                                    className="text-white text-sm font-medium hover:text-orange-300 transition-colors duration-200 px-3 py-1.5 rounded-md hover:bg-blue-500"
                                 >
                                     Profile
                                 </Link>
@@ -71,27 +71,27 @@ export default function Navbar() {
                                     <>
                                         <Link
                                             href="/admin/dashboard"
-                                            className="text-white font-medium hover:text-orange-300 transition-colors duration-200 px-3 py-2 rounded-md hover:bg-blue-500"
+                                            className="text-white text-sm font-medium hover:text-orange-300 transition-colors duration-200 px-3 py-1.5 rounded-md hover:bg-blue-500"
                                         >
                                             Admin Dashboard
                                         </Link>
                                         <Link
                                             href="/admin/upload"
-                                            className="text-white font-medium hover:text-orange-300 transition-colors duration-200 px-3 py-2 rounded-md hover:bg-blue-500"
+                                            className="text-white text-sm font-medium hover:text-orange-300 transition-colors duration-200 px-3 py-1.5 rounded-md hover:bg-blue-500"
                                         >
                                             Upload
                                         </Link>
                                     </>
                                 )}
                                 <div className="flex items-center space-x-3">
-                                    <div className="flex items-center space-x-2 bg-blue-500 px-3 py-2 rounded-lg">
+                                    <div className="flex items-center space-x-2 bg-blue-500 px-3 py-1.5 rounded-lg">
                                         <User className="h-4 w-4 text-white" />
-                                        <span className="text-white text-sm font-medium">
+                                        <span className="text-white text-xs font-medium">
                                             {user?.emailAddresses[0]?.emailAddress || 'User'}
                                         </span>
                                     </div>
                                     <SignOutButton>
-                                        <button className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6 py-2 rounded-lg shadow-md transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
+                                        <button className="bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-4 py-1.5 rounded-lg shadow-md transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
                                             Sign Out
                                         </button>
                                     </SignOutButton>
@@ -99,7 +99,7 @@ export default function Navbar() {
                             </>
                         ) : (
                             <SignInButton mode="modal">
-                                <button className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6 py-2 rounded-lg shadow-md transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
+                                <button className="bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold px-5 py-1.5 rounded-lg shadow-md transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
                                     Sign In
                                 </button>
                             </SignInButton>

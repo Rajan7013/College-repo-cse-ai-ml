@@ -6,39 +6,14 @@ import { Upload, FileText, CheckCircle, XCircle, Loader2, File, ImageIcon, Prese
 import UploadProgress from '@/components/UploadProgress';
 import SuccessAnimation from '@/components/SuccessAnimation';
 
-const BRANCHES = [
-    { value: 'CSE_AI_ML', label: 'CSE (AI & ML)' },
-    { value: 'CSE', label: 'Computer Science Engineering' },
-    { value: 'ECE', label: 'Electronics & Communication' },
-    { value: 'EEE', label: 'Electrical & Electronics' },
-    { value: 'MECH', label: 'Mechanical Engineering' },
-    { value: 'CIVIL', label: 'Civil Engineering' },
-];
-
-const REGULATIONS = ['R23', 'R25', 'R27', 'R29', 'Others'];
-
-const DOCUMENT_TYPES = [
-    'Notes',
-    'MID-1 Question Paper',
-    'MID-2 Question Paper',
-    'Lab Manual',
-    'Lab Exam Question Paper',
-    'Internal Lab Exam',
-    'External Lab Exam',
-    'Final Semester Exam',
-    'Assignment',
-    'Project',
-    'Study Material',
-];
-
-const UNITS = [
-    { value: 'all', label: 'All Units' },
-    { value: '1', label: 'Unit 1' },
-    { value: '2', label: 'Unit 2' },
-    { value: '3', label: 'Unit 3' },
-    { value: '4', label: 'Unit 4' },
-    { value: '5', label: 'Unit 5' },
-];
+import {
+    BRANCH_OPTIONS,
+    REGULATIONS,
+    DOCUMENT_TYPES,
+    UNITS,
+    YEARS,
+    SEMESTERS
+} from '@/lib/constants';
 
 export default function AdminUploadPage() {
     const [uploading, setUploading] = useState(false);
@@ -269,7 +244,7 @@ export default function AdminUploadPage() {
                                         disabled={uploading}
                                     >
                                         <option value="">Select Branch</option>
-                                        {BRANCHES.map(branch => (
+                                        {BRANCH_OPTIONS.map(branch => (
                                             <option key={branch.value} value={branch.value}>
                                                 {branch.label}
                                             </option>
@@ -307,10 +282,11 @@ export default function AdminUploadPage() {
                                         disabled={uploading}
                                     >
                                         <option value="">Select Year</option>
-                                        <option value="1">1st Year</option>
-                                        <option value="2">2nd Year</option>
-                                        <option value="3">3rd Year</option>
-                                        <option value="4">4th Year</option>
+                                        {YEARS.map(year => (
+                                            <option key={year} value={year}>
+                                                {year}{year === '1' ? 'st' : year === '2' ? 'nd' : year === '3' ? 'rd' : 'th'} Year
+                                            </option>
+                                        ))}
                                     </select>
                                 </div>
 
@@ -326,8 +302,9 @@ export default function AdminUploadPage() {
                                         disabled={uploading}
                                     >
                                         <option value="">Select Semester</option>
-                                        <option value="1">Semester 1</option>
-                                        <option value="2">Semester 2</option>
+                                        {SEMESTERS.map(sem => (
+                                            <option key={sem} value={sem}>Semester {sem}</option>
+                                        ))}
                                     </select>
                                 </div>
                             </div>

@@ -37,6 +37,18 @@ export default function DashboardPage() {
             );
         }
 
+        // Subject Name filter
+        if (filters.subjectName) {
+            const term = filters.subjectName.toLowerCase();
+            filtered = filtered.filter(r => r.title.toLowerCase().includes(term));
+        }
+
+        // Subject Code filter
+        if (filters.subjectCode) {
+            const term = filters.subjectCode.toLowerCase();
+            filtered = filtered.filter(r => r.subjectCode.toLowerCase().includes(term));
+        }
+
         // Branch filter
         if (filters.branch) {
             filtered = filtered.filter(r => r.branch === filters.branch);

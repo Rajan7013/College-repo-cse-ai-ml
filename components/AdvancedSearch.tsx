@@ -9,6 +9,8 @@ interface AdvancedSearchProps {
 
 export interface SearchFilters {
     searchTerm: string;
+    subjectName: string; // New
+    subjectCode: string; // New
     branch: string;
     regulation: string;
     year: string;
@@ -19,58 +21,34 @@ export interface SearchFilters {
     sortBy: string;
 }
 
+import {
+    BRANCH_OPTIONS,
+    REGULATIONS,
+    DOCUMENT_TYPES,
+    UNITS as UNIT_OPTIONS,
+    FILE_TYPES as FILE_TYPE_OPTIONS,
+    SORT_OPTIONS,
+    YEARS,
+    SEMESTERS
+} from '@/lib/constants';
+
 const BRANCHES = [
     { value: '', label: 'All Branches' },
-    { value: 'CSE_AI_ML', label: 'CSE (AI & ML)' },
-    { value: 'CSE', label: 'Computer Science' },
-    { value: 'ECE', label: 'Electronics & Communication' },
-    { value: 'EEE', label: 'Electrical & Electronics' },
-    { value: 'MECH', label: 'Mechanical' },
-    { value: 'CIVIL', label: 'Civil' },
+    ...BRANCH_OPTIONS
 ];
 
-const REGULATIONS = ['', 'R23', 'R25', 'R27', 'R29', 'Others'];
+const EXTENDED_REGULATIONS = ['', ...REGULATIONS];
 
-const DOCUMENT_TYPES = [
-    '',
-    'Notes',
-    'MID-1 Question Paper',
-    'MID-2 Question Paper',
-    'Lab Manual',
-    'Lab Exam Question Paper',
-    'Internal Lab Exam',
-    'External Lab Exam',
-    'Final Semester Exam',
-    'Assignment',
-    'Project',
-    'Study Material',
-];
+const EXTENDED_DOCUMENT_TYPES = ['', ...DOCUMENT_TYPES];
 
 const UNITS = [
     { value: '', label: 'All Units' },
-    { value: '1', label: 'Unit 1' },
-    { value: '2', label: 'Unit 2' },
-    { value: '3', label: 'Unit 3' },
-    { value: '4', label: 'Unit 4' },
-    { value: '5', label: 'Unit 5' },
-    { value: 'all', label: 'General (All Units)' },
+    ...UNIT_OPTIONS
 ];
 
 const FILE_TYPES = [
     { value: '', label: 'All File Types' },
-    { value: 'PDF', label: 'PDF' },
-    { value: 'Image', label: 'Images' },
-    { value: 'PPT', label: 'PowerPoint' },
-    { value: 'Word', label: 'Word Documents' },
-];
-
-const SORT_OPTIONS = [
-    { value: 'date-desc', label: 'Latest First' },
-    { value: 'date-asc', label: 'Oldest First' },
-    { value: 'title-asc', label: 'Title (A-Z)' },
-    { value: 'title-desc', label: 'Title (Z-A)' },
-    { value: 'size-desc', label: 'Largest Files' },
-    { value: 'size-asc', label: 'Smallest Files' },
+    ...FILE_TYPE_OPTIONS
 ];
 
 export default function AdvancedSearch({ onSearch }: AdvancedSearchProps) {
@@ -80,6 +58,8 @@ export default function AdvancedSearch({ onSearch }: AdvancedSearchProps) {
 
     const [filters, setFilters] = useState<SearchFilters>({
         searchTerm: '',
+        subjectName: '', // New
+        subjectCode: '', // New
         branch: '',
         regulation: '',
         year: '',
@@ -121,6 +101,8 @@ export default function AdvancedSearch({ onSearch }: AdvancedSearchProps) {
     const clearAllFilters = () => {
         const clearedFilters: SearchFilters = {
             searchTerm: '',
+            subjectName: '',
+            subjectCode: '',
             branch: '',
             regulation: '',
             year: '',
@@ -135,7 +117,8 @@ export default function AdvancedSearch({ onSearch }: AdvancedSearchProps) {
     };
 
     const hasActiveFilters = () => {
-        return filters.searchTerm || filters.branch || filters.regulation ||
+        return filters.searchTerm || filters.subjectName || filters.subjectCode ||
+            filters.branch || filters.regulation ||
             filters.year || filters.semester || filters.documentType ||
             filters.unit || filters.fileType || filters.sortBy !== 'date-desc';
     };
@@ -217,7 +200,7 @@ export default function AdvancedSearch({ onSearch }: AdvancedSearchProps) {
                         className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 text-sm"
                     >
                         <option value="">All Regulations</option>
-                        {REGULATIONS.slice(1).map(reg => (
+                        {EXTENDED_REGULATIONS.slice(1).map(reg => (
                             <option key={reg} value={reg}>{reg}</option>
                         ))}
                     </select>
@@ -229,10 +212,11 @@ export default function AdvancedSearch({ onSearch }: AdvancedSearchProps) {
                         className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 text-sm"
                     >
                         <option value="">All Years</option>
-                        <option value="1">1st Year</option>
-                        <option value="2">2nd Year</option>
-                        <option value="3">3rd Year</option>
-                        <option value="4">4th Year</option>
+                        {YEARS.map(year => (
+                            <option key={year} value={year}>
+                                {year}{year === '1' ? 'st' : year === '2' ? 'nd' : year === '3' ? 'rd' : 'th'} Year
+                            </option>
+                        ))}
                     </select>
 
                     {/* Semester */}
@@ -242,8 +226,9 @@ export default function AdvancedSearch({ onSearch }: AdvancedSearchProps) {
                         className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 text-sm"
                     >
                         <option value="">All Semesters</option>
-                        <option value="1">Semester 1</option>
-                        <option value="2">Semester 2</option>
+                        {SEMESTERS.map(sem => (
+                            <option key={sem} value={sem}>Semester {sem}</option>
+                        ))}
                     </select>
 
                     {/* Sort By */}
@@ -266,6 +251,30 @@ export default function AdvancedSearch({ onSearch }: AdvancedSearchProps) {
                         <h3 className="text-sm font-semibold text-gray-700 mb-3">Additional Filters</h3>
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            {/* Subject Name */}
+                            <div>
+                                <label className="block text-xs font-medium text-gray-700 mb-1">Subject Name</label>
+                                <input
+                                    type="text"
+                                    placeholder="e.g. Data Structures"
+                                    value={filters.subjectName}
+                                    onChange={(e) => handleFilterChange('subjectName', e.target.value)}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 text-sm"
+                                />
+                            </div>
+
+                            {/* Subject Code */}
+                            <div>
+                                <label className="block text-xs font-medium text-gray-700 mb-1">Subject Code</label>
+                                <input
+                                    type="text"
+                                    placeholder="e.g. CS201"
+                                    value={filters.subjectCode}
+                                    onChange={(e) => handleFilterChange('subjectCode', e.target.value)}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 text-sm"
+                                />
+                            </div>
+
                             {/* Branch */}
                             <div>
                                 <label className="block text-xs font-medium text-gray-700 mb-1">Branch</label>
@@ -291,7 +300,7 @@ export default function AdvancedSearch({ onSearch }: AdvancedSearchProps) {
                                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 text-sm"
                                 >
                                     <option value="">All Types</option>
-                                    {DOCUMENT_TYPES.slice(1).map(type => (
+                                    {EXTENDED_DOCUMENT_TYPES.slice(1).map(type => (
                                         <option key={type} value={type}>{type}</option>
                                     ))}
                                 </select>

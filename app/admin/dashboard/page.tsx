@@ -218,7 +218,7 @@ export default async function AdminDashboardPage() {
                                         <td className="py-3 px-4 text-sm text-gray-600">{resource.documentType}</td>
                                         <td className="py-3 px-4 text-sm text-gray-600">{resource.regulation}</td>
                                         <td className="py-3 px-4 text-sm text-gray-500">
-                                            {new Date(resource.uploadedAt).toLocaleDateString()}
+                                            {new Date(resource.uploadedAt).toISOString().split('T')[0]}
                                         </td>
                                         <td className="py-3 px-4">
                                             <div className="flex items-center justify-center space-x-2">
