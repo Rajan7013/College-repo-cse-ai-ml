@@ -1,9 +1,13 @@
 'use server';
 
+// Allow up to 60 seconds for metadata operations (though client upload is separate)
+export const maxDuration = 60;
+
 import { auth } from '@clerk/nextjs/server';
 import { adminDb } from '@/lib/firebase-admin';
 import { r2Client, R2_BUCKET_NAME } from '@/lib/r2';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 export interface UploadResult {
     success: boolean;
@@ -53,11 +57,11 @@ function getFileType(mimeType: string): string {
 }
 
 /**
- * Validate file type and extension
+ * Validate file metadata
  */
-function isValidFile(file: File): { valid: boolean; error?: string } {
+function isValidFileMetadata(name: string, type: string, size: number): { valid: boolean; error?: string } {
     // Check MIME type
-    if (!ALLOWED_MIME_TYPES.includes(file.type)) {
+    if (!ALLOWED_MIME_TYPES.includes(type)) {
         return {
             valid: false,
             error: 'File type not allowed. Supported: PDF, Images (JPG/PNG), PowerPoint (PPT/PPX), Word (DOC/DOCX)',
@@ -65,7 +69,7 @@ function isValidFile(file: File): { valid: boolean; error?: string } {
     }
 
     // Check file extension
-    const extension = '.' + file.name.split('.').pop()?.toLowerCase();
+    const extension = '.' + name.split('.').pop()?.toLowerCase();
     if (!ALLOWED_EXTENSIONS.includes(extension)) {
         return {
             valid: false,
@@ -74,8 +78,8 @@ function isValidFile(file: File): { valid: boolean; error?: string } {
     }
 
     // Check file size
-    const maxSize = MAX_FILE_SIZE[file.type] || 50 * 1024 * 1024;
-    if (file.size > maxSize) {
+    const maxSize = MAX_FILE_SIZE[type] || 50 * 1024 * 1024;
+    if (size > maxSize) {
         return {
             valid: false,
             error: `File size exceeds limit (${(maxSize / 1024 / 1024).toFixed(0)} MB)`,
@@ -86,131 +90,123 @@ function isValidFile(file: File): { valid: boolean; error?: string } {
 }
 
 /**
- * Upload a resource file to R2 and save metadata to Firestore
- * Only admins can upload files
+ * Step 1: Generate a Presigned URL for direct client upload to R2
+ * This bypasses Vercel's 4.5MB limit
  */
-export async function uploadResource(formData: FormData): Promise<UploadResult> {
+export async function getAdminPresignedUrl(
+    filename: string,
+    contentType: string,
+    size: number
+): Promise<{ success: boolean; uploadUrl?: string; publicUrl?: string; key?: string; error?: string }> {
     try {
-        // 1. Check authentication
+        // 1. Check authentication & Admin Role
         const { userId } = await auth();
+        if (!userId) return { success: false, error: 'Unauthorized' };
 
-        if (!userId) {
-            return {
-                success: false,
-                message: 'Unauthorized: Please sign in',
-            };
-        }
-
-        // 2. Check if user is admin
         const userDoc = await adminDb.collection('users').doc(userId).get();
-
-        if (!userDoc.exists) {
-            return {
-                success: false,
-                message: 'User not found. Please sign in again.',
-            };
+        if (!userDoc.exists || userDoc.data()?.role !== 'admin') {
+            return { success: false, error: 'Unauthorized: Admin access required' };
         }
 
-        const userRole = userDoc.data()?.role;
-
-        if (userRole !== 'admin') {
-            return {
-                success: false,
-                message: 'Unauthorized: Admin access required',
-            };
-        }
-
-        // 3. Extract form data
-        const file = formData.get('file') as File;
-        const title = formData.get('title') as string;
-        const branch = formData.get('branch') as string;
-        const regulation = formData.get('regulation') as string;
-        const year = parseInt(formData.get('year') as string);
-        const semester = parseInt(formData.get('semester') as string);
-        const subjectCode = formData.get('subjectCode') as string;
-        const documentType = formData.get('documentType') as string;
-        const unitValue = formData.get('unit') as string;
-        const tagsString = formData.get('tags') as string;
-        const description = formData.get('description') as string;
-
-        // Parse tags (comma-separated)
-        const tags = tagsString ? tagsString.split(',').map(t => t.trim()).filter(t => t) : [];
-
-        // Parse unit
-        const unit = unitValue === 'all' ? 'all' : parseInt(unitValue);
-
-        // 4. Validate required fields
-        if (!file || !title || !branch || !regulation || !year || !semester || !subjectCode || !documentType || !unitValue) {
-            return {
-                success: false,
-                message: 'All required fields must be filled',
-            };
-        }
-
-        // 5. Validate file type and size
-        const validation = isValidFile(file);
+        // 2. Validate file metadata
+        const validation = isValidFileMetadata(filename, contentType, size);
         if (!validation.valid) {
-            return {
-                success: false,
-                message: validation.error || 'Invalid file',
-            };
+            return { success: false, error: validation.error };
         }
 
-        // 6. Upload to R2
+        // 3. Generate Key
         const timestamp = Date.now();
-        const sanitizedFilename = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+        const sanitizedFilename = filename.replace(/[^a-zA-Z0-9.-]/g, '_');
         const key = `resources/${timestamp}-${sanitizedFilename}`;
 
-        const fileBuffer = Buffer.from(await file.arrayBuffer());
+        // 4. Generate Signed URL
+        const command = new PutObjectCommand({
+            Bucket: R2_BUCKET_NAME,
+            Key: key,
+            ContentType: contentType,
+        });
 
-        await r2Client.send(
-            new PutObjectCommand({
-                Bucket: R2_BUCKET_NAME,
-                Key: key,
-                Body: fileBuffer,
-                ContentType: file.type,
-            })
-        );
+        const uploadUrl = await getSignedUrl(r2Client, command, { expiresIn: 3600 });
+        const publicUrl = `${process.env.NEXT_PUBLIC_R2_PUBLIC_URL}/${key}`;
 
-        // 7. Generate public URL
-        const fileUrl = `${process.env.NEXT_PUBLIC_R2_PUBLIC_URL}/${key}`;
+        return { success: true, uploadUrl, publicUrl, key };
 
-        // 8. Determine file type
-        const fileType = getFileType(file.type);
+    } catch (error: any) {
+        console.error('Presigned URL Error:', error);
+        return { success: false, error: 'Failed to generate upload URL' };
+    }
+}
 
-        // 9. Save metadata to Firestore
+/**
+ * Step 2: Save metadata to Firestore AFTER client upload is complete
+ */
+export async function saveResourceMetadata(data: {
+    title: string;
+    branch: string;
+    regulation: string;
+    year: number;
+    semester: number;
+    subjectCode: string;
+    documentType: string;
+    unit: string | number;
+    tags: string[];
+    description: string;
+    fileUrl: string; // Provided by client after successful upload
+    filename: string; // The R2 key or original filename
+    fileType: string; // MIME type
+    fileSize: number;
+}): Promise<UploadResult> {
+    try {
+        // 1. Check authentication & Admin Role
+        const { userId } = await auth();
+        if (!userId) return { success: false, message: 'Unauthorized' };
+
+        const userDoc = await adminDb.collection('users').doc(userId).get();
+        if (!userDoc.exists || userDoc.data()?.role !== 'admin') {
+            return { success: false, message: 'Unauthorized: Admin access required' };
+        }
+
+        // 2. Determine generalized file type
+        const generalFileType = getFileType(data.fileType);
+
+        // 3. Save to Firestore
         const docRef = await adminDb.collection('resources').add({
-            title,
-            branch,
-            regulation,
-            year,
-            semester,
-            subjectCode,
-            documentType,
-            unit,
-            tags,
-            description: description || '',
-            fileUrl,
-            filename: sanitizedFilename,
-            fileType,
-            mimeType: file.type,
-            fileSize: file.size,
+            title: data.title,
+            branch: data.branch,
+            regulation: data.regulation,
+            year: data.year,
+            semester: data.semester,
+            subjectCode: data.subjectCode,
+            documentType: data.documentType,
+            unit: data.unit,
+            tags: data.tags,
+            description: data.description || '',
+            fileUrl: data.fileUrl,
+            filename: data.filename,
+            fileType: generalFileType, // PDF, Image, etc.
+            mimeType: data.fileType,
+            fileSize: data.fileSize,
             uploadedBy: userId,
             uploadedAt: new Date(),
         });
 
         return {
             success: true,
-            message: 'Resource uploaded successfully!',
+            message: 'Resource saved successfully!',
             documentId: docRef.id,
-            fileUrl,
+            fileUrl: data.fileUrl,
         };
 
-    } catch (error) {
-        console.error('Upload error:', error);
-        return {
-            success: false,
-            message: error instanceof Error ? error.message : 'Upload failed. Please try again.',
-        };
+    } catch (error: any) {
+        console.error('Metadata Save Error:', error);
+        return { success: false, message: 'Failed to save resource metadata.' };
     }
+}
+
+/**
+ * Deprecated: Original Server-Side Upload (Limited to 4.5MB on Vercel)
+ * Kept for reference or small file fallbacks if needed, but UI should use new flow.
+ */
+export async function uploadResource(formData: FormData): Promise<UploadResult> {
+    return { success: false, message: "Please use the new client-side upload flow." };
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { uploadResource } from '@/lib/actions/upload';
+import { getAdminPresignedUrl, saveResourceMetadata } from '@/lib/actions/upload'; // Updated imports
 import { getSubjects, Subject } from '@/lib/actions/curriculum';
 import { Upload, FileText, CheckCircle, XCircle, Loader2, File, ImageIcon, Presentation, CloudUpload, Sparkles, BookOpen, Layers } from 'lucide-react';
 import UploadProgress from '@/components/UploadProgress';
@@ -65,19 +65,8 @@ export default function AdminUploadPage() {
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
-            const allowedTypes = [
-                'application/pdf',
-                'image/jpeg', 'image/png',
-                'application/vnd.ms-powerpoint',
-                'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-                'application/msword',
-                'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-            ];
-            if (!allowedTypes.includes(file.type)) {
-                setError('Supported: PDF, Images (JPG/PNG), PowerPoint (PPT/PPTX), Word (DOC/DOCX)');
-                setSelectedFile(null);
-                return;
-            }
+            // Note: Validation happens primarily on server, but basic client check is good
+            // Simplified here to rely on server config
             setSelectedFile(file);
             setError(null);
         }
@@ -96,41 +85,87 @@ export default function AdminUploadPage() {
         setSuccess(false);
         setProgress(0);
 
-        // Simulate progress
-        const progressInterval = setInterval(() => {
-            setProgress(prev => {
-                if (prev >= 90) {
-                    clearInterval(progressInterval);
-                    return 90;
-                }
-                return prev + 10;
-            });
-        }, 200);
-
         const formData = new FormData(e.currentTarget);
+        const title = formData.get('title') as string;
+        const branch = formData.get('branch') as string;
+        const regulation = formData.get('regulation') as string;
+        const year = parseInt(formData.get('year') as string);
+        const semester = parseInt(formData.get('semester') as string);
+        const subjectCode = formData.get('subjectCode') as string;
+        const documentType = formData.get('documentType') as string;
+        const unitValue = formData.get('unit') as string;
+        const tagsString = formData.get('tags') as string;
+        const description = formData.get('description') as string;
+
+        const tags = tagsString ? tagsString.split(',').map(t => t.trim()).filter(t => t) : [];
 
         try {
-            const result = await uploadResource(formData);
+            // 1. Get Presigned URL
+            const presigned = await getAdminPresignedUrl(selectedFile.name, selectedFile.type, selectedFile.size);
 
-            setProgress(100);
-            clearInterval(progressInterval);
+            if (!presigned.success || !presigned.uploadUrl || !presigned.key || !presigned.publicUrl) {
+                throw new Error(presigned.error || "Failed to initiate upload");
+            }
+
+            // 2. Upload to R2 via XHR (for progress)
+            await new Promise<void>((resolve, reject) => {
+                const xhr = new XMLHttpRequest();
+                xhr.open('PUT', presigned.uploadUrl!, true);
+                xhr.setRequestHeader('Content-Type', selectedFile.type);
+
+                xhr.upload.onprogress = (event) => {
+                    if (event.lengthComputable) {
+                        const percentComplete = (event.loaded / event.total) * 100;
+                        setProgress(Math.round(percentComplete)); // Update progress state
+                    }
+                };
+
+                xhr.onload = () => {
+                    if (xhr.status === 200) {
+                        resolve();
+                    } else {
+                        reject(new Error(`Upload failed with status: ${xhr.status}`));
+                    }
+                };
+
+                xhr.onerror = () => reject(new Error('Network error during upload'));
+
+                xhr.send(selectedFile);
+            });
+
+            // 3. Save Metadata
+            const result = await saveResourceMetadata({
+                title,
+                branch,
+                regulation,
+                year,
+                semester,
+                subjectCode,
+                documentType,
+                unit: unitValue === 'all' ? 'all' : parseInt(unitValue),
+                tags,
+                description,
+                fileUrl: presigned.publicUrl,
+                filename: presigned.key,
+                fileType: selectedFile.type,
+                fileSize: selectedFile.size
+            });
 
             if (result.success) {
                 setSuccess(true);
                 setSelectedFile(null);
                 formRef.current?.reset();
 
-                // Auto-hide success after 5 seconds
                 setTimeout(() => {
                     setSuccess(false);
                     setProgress(0);
                 }, 5000);
             } else {
-                setError(result.message);
-                setProgress(0);
+                throw new Error(result.message);
             }
+
         } catch (err) {
-            clearInterval(progressInterval);
+            console.error(err);
             setError(err instanceof Error ? err.message : 'Upload failed');
             setProgress(0);
         } finally {
