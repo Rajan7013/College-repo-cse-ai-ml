@@ -84,7 +84,7 @@ export default function SearchBar({ value, onChange, onSearch, placeholder = 'Se
         <div className="relative w-full">
             <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <Search className="h-5 w-5 text-slate-400" />
+                    <Search className="h-5 w-5 text-blue-400" />
                 </div>
 
                 <input
@@ -95,13 +95,13 @@ export default function SearchBar({ value, onChange, onSearch, placeholder = 'Se
                     onFocus={() => value.length >= 2 && setShowSuggestions(true)}
                     onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
                     placeholder={placeholder}
-                    className="w-full pl-12 pr-12 py-4 text-base border-2 border-slate-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all"
+                    className="w-full pl-12 pr-12 py-4 text-base bg-[#0f172a]/60 backdrop-blur-md border border-white/10 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-white placeholder-blue-300/50 transition-all"
                 />
 
                 {value && (
                     <button
                         onClick={handleClear}
-                        className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600"
+                        className="absolute inset-y-0 right-0 pr-4 flex items-center text-blue-300 hover:text-white"
                     >
                         <X className="h-5 w-5" />
                     </button>
@@ -110,16 +110,16 @@ export default function SearchBar({ value, onChange, onSearch, placeholder = 'Se
 
             {/* Suggestions Dropdown */}
             {showSuggestions && suggestions.length > 0 && (
-                <div className="absolute z-50 w-full mt-2 bg-white border border-slate-200 rounded-xl shadow-lg max-h-64 overflow-y-auto">
+                <div className="absolute z-50 w-full mt-2 bg-[#0f172a] border border-white/10 rounded-xl shadow-xl shadow-black/50 max-h-64 overflow-y-auto custom-scrollbar">
                     {suggestions.map((suggestion, idx) => (
                         <button
                             key={idx}
                             onClick={() => handleSuggestionClick(suggestion)}
-                            className="w-full px-4 py-3 text-left hover:bg-blue-50 transition-colors border-b border-slate-100 last:border-b-0"
+                            className="w-full px-4 py-3 text-left hover:bg-white/5 transition-colors border-b border-white/5 last:border-b-0"
                         >
                             <div className="flex items-center gap-2">
-                                <Search className="h-4 w-4 text-slate-400" />
-                                <span className="text-slate-700">{suggestion}</span>
+                                <Search className="h-4 w-4 text-blue-400" />
+                                <span className="text-blue-100">{suggestion}</span>
                             </div>
                         </button>
                     ))}
@@ -129,7 +129,7 @@ export default function SearchBar({ value, onChange, onSearch, placeholder = 'Se
             {/* Loading indicator */}
             {loading && (
                 <div className="absolute right-14 top-1/2 -translate-y-1/2">
-                    <div className="animate-spin h-4 w-4 border-2 border-blue-600 border-t-transparent rounded-full"></div>
+                    <div className="animate-spin h-4 w-4 border-2 border-blue-500 border-t-transparent rounded-full"></div>
                 </div>
             )}
         </div>

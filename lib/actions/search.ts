@@ -29,6 +29,9 @@ export interface SearchResult {
 /**
  * Advanced search with multiple filters and sorting
  */
+/**
+ * Advanced search with multiple filters and sorting
+ */
 export async function searchResources(
     filters: SearchFilters,
     sort: SearchSort = { field: 'uploadedAt', direction: 'desc' },
@@ -39,7 +42,6 @@ export async function searchResources(
         let query: FirebaseFirestore.Query = adminDb.collection('resources');
 
         // Apply filters in order matching Firebase composite index
-        // Index order: regulation → year → semester → documentType → uploadedAt
 
         if (filters.regulation) {
             query = query.where('regulation', '==', filters.regulation);
@@ -76,7 +78,8 @@ export async function searchResources(
         // Apply sorting
         query = query.orderBy(sort.field, sort.direction);
 
-        // Get total count for pagination (before limiting)
+        // Get total count (approximation/snapshot based)
+        // Note: For large collections, aggregation queries are better, but for now this works matching the previous patterns
         const countSnapshot = await query.count().get();
         const total = countSnapshot.data().count;
 
@@ -110,14 +113,30 @@ export async function searchResources(
             };
         });
 
-        // Text search filter (client-side for now, can be improved with Algolia later)
+        // Smart Text Search (Client-side filtering of the fetched page)
+        // Supports: Title, Description, Subject Code, AND Subject Name
         let filteredResources = resources;
         if (filters.query) {
             const lowerQuery = filters.query.toLowerCase();
+
+            // 1. Find subject codes that match the query (Subject Name -> Subject Code)
+            // This allows searching for "Python" and finding resources with code "CS3201"
+            const subjectsRef = adminDb.collection('subjects');
+            const subjectSnapshot = await subjectsRef.get(); // Fetch all subjects to cache/check names (optimized for small-medium datasets)
+
+            const matchingSubjectCodes = new Set<string>();
+            subjectSnapshot.docs.forEach(doc => {
+                const data = doc.data();
+                if (data.name.toLowerCase().includes(lowerQuery) || data.code.toLowerCase().includes(lowerQuery)) {
+                    matchingSubjectCodes.add(data.code);
+                }
+            });
+
             filteredResources = resources.filter(r =>
                 r.title.toLowerCase().includes(lowerQuery) ||
                 r.description?.toLowerCase().includes(lowerQuery) ||
-                r.subjectCode?.toLowerCase().includes(lowerQuery)
+                r.subjectCode?.toLowerCase().includes(lowerQuery) ||
+                matchingSubjectCodes.has(r.subjectCode)
             );
         }
 

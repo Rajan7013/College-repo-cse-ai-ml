@@ -41,55 +41,55 @@ export default async function AdminDashboardPage() {
         <div className="min-h-screen py-8 px-4">
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
-                <div className="mb-12 glass-card p-8 bg-gradient-to-r from-blue-900/40 to-slate-900/40">
-                    <div className="flex items-center gap-4 mb-2">
-                        <div className="p-3 bg-blue-500/20 rounded-xl border border-blue-500/30">
-                            <ShieldCheck className="h-8 w-8 text-cyan-400" />
+                <div className="mb-8 md:mb-12 glass-card p-6 md:p-8 bg-gradient-to-r from-blue-900/40 to-slate-900/40">
+                    <div className="flex flex-col md:flex-row items-center gap-4 text-center md:text-left">
+                        <div className="p-3 bg-blue-500/20 rounded-xl border border-blue-500/30 shrink-0">
+                            <ShieldCheck className="h-8 w-8 md:h-10 md:w-10 text-cyan-400" />
                         </div>
                         <div>
-                            <h1 className="text-4xl font-black text-white">Admin Dashboard</h1>
-                            <p className="text-blue-200">Overview of your academic resource repository</p>
+                            <h1 className="text-3xl md:text-4xl font-black text-white leading-tight">Admin Dashboard</h1>
+                            <p className="text-blue-200 text-sm md:text-base">Overview of your academic resource repository</p>
                         </div>
                     </div>
                 </div>
 
                 {/* Stats Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
                     {/* Total Resources */}
-                    <div className="glass-card p-6 relative overflow-hidden group">
+                    <div className="glass-card p-6 relative overflow-hidden group hover:scale-[1.02] transition-transform">
                         <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                             <FileText className="h-16 w-16 text-blue-400" />
                         </div>
                         <div className="flex items-center justify-between mb-4 relative z-10">
                             <div className="p-3 bg-blue-500/20 rounded-xl border border-blue-500/30">
-                                <FileText className="h-8 w-8 text-cyan-400" />
+                                <FileText className="h-6 w-6 md:h-8 md:w-8 text-cyan-400" />
                             </div>
                             <span className="flex items-center gap-1 text-emerald-400 text-xs font-bold bg-emerald-500/10 px-2 py-1 rounded-lg border border-emerald-500/20">
                                 <TrendingUp className="h-3 w-3" />
                                 +12%
                             </span>
                         </div>
-                        <h3 className="text-3xl font-black text-white mb-1 relative z-10">
+                        <h3 className="text-2xl md:text-3xl font-black text-white mb-1 relative z-10">
                             {stats.totalResources}
                         </h3>
                         <p className="text-sm text-blue-300 relative z-10">Total Resources</p>
                     </div>
 
                     {/* Total Users */}
-                    <div className="glass-card p-6 relative overflow-hidden group">
+                    <div className="glass-card p-6 relative overflow-hidden group hover:scale-[1.02] transition-transform">
                         <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                             <Users className="h-16 w-16 text-emerald-400" />
                         </div>
                         <div className="flex items-center justify-between mb-4 relative z-10">
                             <div className="p-3 bg-emerald-500/20 rounded-xl border border-emerald-500/30">
-                                <Users className="h-8 w-8 text-emerald-400" />
+                                <Users className="h-6 w-6 md:h-8 md:w-8 text-emerald-400" />
                             </div>
                             <span className="flex items-center gap-1 text-emerald-400 text-xs font-bold bg-emerald-500/10 px-2 py-1 rounded-lg border border-emerald-500/20">
                                 <TrendingUp className="h-3 w-3" />
                                 +5%
                             </span>
                         </div>
-                        <h3 className="text-3xl font-black text-white mb-1 relative z-10">
+                        <h3 className="text-2xl md:text-3xl font-black text-white mb-1 relative z-10">
                             {stats.totalUsers}
                         </h3>
                         <p className="text-sm text-blue-300 relative z-10">Registered Users</p>
@@ -101,14 +101,14 @@ export default async function AdminDashboardPage() {
                             <div className="absolute inset-0 bg-white/10 opacity-0 hover:opacity-100 transition-opacity"></div>
                             <div className="flex items-center justify-between mb-4 relative z-10">
                                 <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
-                                    <Upload className="h-8 w-8 text-white" />
+                                    <Upload className="h-6 w-6 md:h-8 md:w-8 text-white" />
                                 </div>
                             </div>
                             <div className="relative z-10">
-                                <h3 className="text-2xl font-black text-white mb-1">
+                                <h3 className="text-xl md:text-2xl font-black text-white mb-1">
                                     Upload
                                 </h3>
-                                <p className="text-sm text-blue-100 font-medium">Add New Resource</p>
+                                <p className="text-xs md:text-sm text-blue-100 font-medium">Add New Resource</p>
                             </div>
                         </div>
                     </Link>
@@ -119,42 +119,48 @@ export default async function AdminDashboardPage() {
                             <div className="absolute inset-0 bg-white/10 opacity-0 hover:opacity-100 transition-opacity"></div>
                             <div className="flex items-center justify-between mb-4 relative z-10">
                                 <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
-                                    <GraduationCap className="h-8 w-8 text-white" />
+                                    <GraduationCap className="h-6 w-6 md:h-8 md:w-8 text-white" />
                                 </div>
                             </div>
                             <div className="relative z-10">
-                                <h3 className="text-2xl font-black text-white mb-1">
+                                <h3 className="text-xl md:text-2xl font-black text-white mb-1">
                                     Curriculum
                                 </h3>
-                                <p className="text-sm text-indigo-100 font-medium">Manage Subjects</p>
+                                <p className="text-xs md:text-sm text-indigo-100 font-medium">Manage Subjects</p>
                             </div>
                         </div>
                     </Link>
                 </div>
 
                 {/* Analytics Section */}
-                <div className="glass-card p-6 mb-8">
-                    <h2 className="text-xl font-bold text-white mb-6 flex items-center space-x-2">
+                <div className="glass-card p-4 md:p-6 mb-8 overflow-hidden">
+                    <h2 className="text-lg md:text-xl font-bold text-white mb-6 flex items-center space-x-2">
                         <TrendingUp className="h-5 w-5 text-purple-400" />
                         <span>Behavior Analytics</span>
                     </h2>
-                    <AnalyticsDashboard />
+                    <div className="overflow-x-auto pb-2">
+                        <div className="min-w-[600px]">
+                            <AnalyticsDashboard />
+                        </div>
+                    </div>
                 </div>
 
                 {/* Role Management */}
-                <div className="glass-card p-6 mb-8">
-                    <h2 className="text-xl font-bold text-white mb-6 flex items-center space-x-2">
+                <div className="glass-card p-4 md:p-6 mb-8">
+                    <h2 className="text-lg md:text-xl font-bold text-white mb-6 flex items-center space-x-2">
                         <ShieldCheck className="h-5 w-5 text-emerald-400" />
-                        <span>Role Management (Whitelist)</span>
+                        <span>Role Management</span>
                     </h2>
-                    <UserRoleManager />
+                    <div className="overflow-x-auto pb-2">
+                        <UserRoleManager />
+                    </div>
                 </div>
 
                 {/* Charts Row */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                     {/* Resources by Type */}
-                    <div className="glass-card p-6">
-                        <h2 className="text-xl font-bold text-white mb-6 flex items-center space-x-2">
+                    <div className="glass-card p-4 md:p-6">
+                        <h2 className="text-lg md:text-xl font-bold text-white mb-6 flex items-center space-x-2">
                             <BarChart3 className="h-5 w-5 text-cyan-400" />
                             <span>Resources by Document Type</span>
                         </h2>
@@ -166,7 +172,7 @@ export default async function AdminDashboardPage() {
                                     const percentage = (count / stats.totalResources) * 100;
                                     return (
                                         <div key={type}>
-                                            <div className="flex justify-between text-sm mb-2">
+                                            <div className="flex justify-between text-xs md:text-sm mb-2">
                                                 <span className="text-blue-200 font-medium">{type}</span>
                                                 <span className="text-white font-bold">{count}</span>
                                             </div>
@@ -183,8 +189,8 @@ export default async function AdminDashboardPage() {
                     </div>
 
                     {/* Resources by Regulation */}
-                    <div className="glass-card p-6">
-                        <h2 className="text-xl font-bold text-white mb-6 flex items-center space-x-2">
+                    <div className="glass-card p-4 md:p-6">
+                        <h2 className="text-lg md:text-xl font-bold text-white mb-6 flex items-center space-x-2">
                             <BarChart3 className="h-5 w-5 text-emerald-400" />
                             <span>Resources by Regulation</span>
                         </h2>
@@ -195,7 +201,7 @@ export default async function AdminDashboardPage() {
                                     const percentage = (count / stats.totalResources) * 100;
                                     return (
                                         <div key={regulation}>
-                                            <div className="flex justify-between text-sm mb-2">
+                                            <div className="flex justify-between text-xs md:text-sm mb-2">
                                                 <span className="text-blue-200 font-medium">{regulation}</span>
                                                 <span className="text-white font-bold">{count}</span>
                                             </div>
@@ -213,18 +219,18 @@ export default async function AdminDashboardPage() {
                 </div>
 
                 {/* Resources by Branch */}
-                <div className="glass-card p-6 mb-8">
-                    <h2 className="text-xl font-bold text-white mb-6 flex items-center space-x-2">
+                <div className="glass-card p-4 md:p-6 mb-8">
+                    <h2 className="text-lg md:text-xl font-bold text-white mb-6 flex items-center space-x-2">
                         <BarChart3 className="h-5 w-5 text-purple-400" />
                         <span>Resources by Branch</span>
                     </h2>
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
                         {Object.entries(stats.resourcesByBranch)
                             .sort(([, a], [, b]) => b - a)
                             .map(([branch, count]) => (
-                                <div key={branch} className="text-center p-4 bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition-colors">
-                                    <p className="text-3xl font-black text-white mb-1">{count}</p>
-                                    <p className="text-xs text-blue-300 font-bold uppercase tracking-wider">{getBranchLabel(branch)}</p>
+                                <div key={branch} className="text-center p-3 md:p-4 bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition-colors">
+                                    <p className="text-2xl md:text-3xl font-black text-white mb-1">{count}</p>
+                                    <p className="text-[10px] md:text-xs text-blue-300 font-bold uppercase tracking-wider">{getBranchLabel(branch)}</p>
                                 </div>
                             ))}
                     </div>

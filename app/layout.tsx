@@ -23,8 +23,9 @@ export const metadata: Metadata = {
     title: "EduNexus",
   },
   icons: {
-    icon: "/icon-192x192.png",
-    apple: "/icon-192x192.png", // Reusing 192 for simplicity, ideally should be specific size
+    icon: "/icon-512x512.png?v=5",
+    apple: "/icon-512x512.png?v=5",
+    shortcut: "/icon-512x512.png?v=5",
   },
 };
 

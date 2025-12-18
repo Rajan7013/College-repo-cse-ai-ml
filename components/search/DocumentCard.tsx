@@ -28,19 +28,19 @@ export default function DocumentCard({ resource }: DocumentCardProps) {
     };
 
     return (
-        <div className="bg-white rounded-xl border border-slate-200 hover:border-blue-300 hover:shadow-lg transition-all duration-300 overflow-hidden group">
+        <div className="glass-card overflow-hidden group hover:border-blue-400/50 hover:shadow-glow transition-all duration-300">
             {/* Icon & Header */}
-            <div className="p-4 border-b border-slate-100">
+            <div className="p-4 border-b border-white/10">
                 <div className="flex items-start gap-3">
-                    <div className="p-3 bg-slate-50 rounded-lg group-hover:bg-blue-50 transition-colors">
+                    <div className="p-3 bg-white/5 rounded-lg group-hover:bg-blue-500/20 transition-colors border border-white/5">
                         {getFileIcon(resource.fileType)}
                     </div>
                     <div className="flex-1 min-w-0">
-                        <h3 className="text-base font-bold text-slate-900 line-clamp-2 group-hover:text-blue-600 transition-colors">
+                        <h3 className="text-base font-bold text-white line-clamp-2 group-hover:text-blue-400 transition-colors">
                             {resource.title}
                         </h3>
                         {resource.description && (
-                            <p className="text-sm text-slate-600 line-clamp-1 mt-1">
+                            <p className="text-sm text-blue-200/70 line-clamp-1 mt-1">
                                 {resource.description}
                             </p>
                         )}
@@ -50,8 +50,8 @@ export default function DocumentCard({ resource }: DocumentCardProps) {
 
             {/* Metadata */}
             <div className="p-4 space-y-2">
-                <div className="flex items-center gap-2 text-xs text-slate-600">
-                    <span className="font-semibold">{resource.subjectCode}</span>
+                <div className="flex items-center gap-2 text-xs text-blue-200/80">
+                    <span className="font-semibold text-blue-100">{resource.subjectCode}</span>
                     {resource.documentType && (
                         <>
                             <span>•</span>
@@ -59,7 +59,7 @@ export default function DocumentCard({ resource }: DocumentCardProps) {
                         </>
                     )}
                 </div>
-                <div className="flex items-center gap-4 text-xs text-slate-500">
+                <div className="flex items-center gap-4 text-xs text-blue-300/60">
                     <span className="flex items-center gap-1">
                         <Calendar className="h-3 w-3" />
                         {formatDate(resource.uploadedAt)}
@@ -72,23 +72,23 @@ export default function DocumentCard({ resource }: DocumentCardProps) {
                     )}
                 </div>
                 <div className="flex gap-2 flex-wrap">
-                    <span className="px-2 py-1 bg-blue-50 text-blue-700 text-xs font-semibold rounded-md">
+                    <span className="px-2 py-1 bg-blue-500/20 text-blue-200 text-xs font-semibold rounded-md border border-blue-500/20">
                         {resource.regulation}
                     </span>
-                    <span className="px-2 py-1 bg-green-50 text-green-700 text-xs font-semibold rounded-md">
+                    <span className="px-2 py-1 bg-emerald-500/20 text-emerald-300 text-xs font-semibold rounded-md border border-emerald-500/20">
                         Year {resource.year} Sem {resource.semester}
                     </span>
-                    <span className="px-2 py-1 bg-purple-50 text-purple-700 text-xs font-semibold rounded-md">
+                    <span className="px-2 py-1 bg-purple-500/20 text-purple-300 text-xs font-semibold rounded-md border border-purple-500/20">
                         Unit {resource.unit}
                     </span>
                 </div>
             </div>
 
             {/* Actions */}
-            <div className="p-4 bg-slate-50 border-t border-slate-100 flex gap-2">
+            <div className="p-4 bg-white/5 border-t border-white/10 flex gap-2">
                 <Link
                     href={`/viewer/${resource.id}`}
-                    className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors flex items-center justify-center gap-2 text-sm"
+                    className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-lg transition-colors flex items-center justify-center gap-2 text-sm shadow-[0_0_10px_rgba(37,99,235,0.3)]"
                 >
                     <Eye className="h-4 w-4" />
                     View
@@ -98,7 +98,7 @@ export default function DocumentCard({ resource }: DocumentCardProps) {
                     download
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-4 py-2 bg-white hover:bg-slate-100 text-slate-700 font-semibold rounded-lg border border-slate-200 transition-colors flex items-center gap-2 text-sm"
+                    className="px-4 py-2 bg-white/5 hover:bg-white/10 text-blue-100 font-semibold rounded-lg border border-white/10 transition-colors flex items-center gap-2 text-sm"
                 >
                     <Download className="h-4 w-4" />
                     Download

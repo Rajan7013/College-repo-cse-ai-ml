@@ -19,8 +19,8 @@ export default function SearchResults({ resources, total, loading, onLoadMore, h
     if (loading && resources.length === 0) {
         return (
             <div className="flex flex-col items-center justify-center py-20">
-                <Loader2 className="h-12 w-12 text-blue-600 animate-spin mb-4" />
-                <p className="text-slate-600">Searching...</p>
+                <Loader2 className="h-12 w-12 text-blue-500 animate-spin mb-4" />
+                <p className="text-blue-200">Searching...</p>
             </div>
         );
     }
@@ -28,11 +28,11 @@ export default function SearchResults({ resources, total, loading, onLoadMore, h
     if (resources.length === 0) {
         return (
             <div className="flex flex-col items-center justify-center py-20">
-                <div className="p-6 bg-slate-100 rounded-full mb-4">
-                    <Grid3x3 className="h-12 w-12 text-slate-400" />
+                <div className="p-6 bg-white/5 rounded-full mb-4 border border-white/10">
+                    <Grid3x3 className="h-12 w-12 text-blue-400" />
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-2">No Results Found</h3>
-                <p className="text-slate-600 text-center max-w-md">
+                <h3 className="text-xl font-bold text-white mb-2">No Results Found</h3>
+                <p className="text-blue-200/70 text-center max-w-md">
                     Try adjusting your filters or search query to find what you're looking for.
                 </p>
             </div>
@@ -44,19 +44,19 @@ export default function SearchResults({ resources, total, loading, onLoadMore, h
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="text-2xl font-bold text-slate-900">Search Results</h2>
-                    <p className="text-slate-600 mt-1">
-                        Found <span className="font-semibold text-blue-600">{total}</span> documents
+                    <h2 className="text-2xl font-bold text-white">Search Results</h2>
+                    <p className="text-blue-200/70 mt-1">
+                        Found <span className="font-semibold text-blue-400">{total}</span> documents
                     </p>
                 </div>
 
                 {/* View Toggle */}
-                <div className="flex items-center gap-2 bg-white border border-slate-200 rounded-lg p-1">
+                <div className="flex items-center gap-2 bg-[#0f172a]/60 border border-white/10 rounded-lg p-1">
                     <button
                         onClick={() => setViewMode('grid')}
                         className={`p-2 rounded transition-colors ${viewMode === 'grid'
-                                ? 'bg-blue-600 text-white'
-                                : 'text-slate-600 hover:bg-slate-100'
+                            ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20'
+                            : 'text-blue-300 hover:bg-white/5'
                             }`}
                     >
                         <Grid3x3 className="h-5 w-5" />
@@ -64,8 +64,8 @@ export default function SearchResults({ resources, total, loading, onLoadMore, h
                     <button
                         onClick={() => setViewMode('list')}
                         className={`p-2 rounded transition-colors ${viewMode === 'list'
-                                ? 'bg-blue-600 text-white'
-                                : 'text-slate-600 hover:bg-slate-100'
+                            ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20'
+                            : 'text-blue-300 hover:bg-white/5'
                             }`}
                     >
                         <List className="h-5 w-5" />
@@ -76,8 +76,8 @@ export default function SearchResults({ resources, total, loading, onLoadMore, h
             {/* Results Grid/List */}
             <div
                 className={`grid gap-6 ${viewMode === 'grid'
-                        ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
-                        : 'grid-cols-1'
+                    ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+                    : 'grid-cols-1'
                     }`}
             >
                 {resources.map(resource => (
@@ -91,7 +91,7 @@ export default function SearchResults({ resources, total, loading, onLoadMore, h
                     <button
                         onClick={onLoadMore}
                         disabled={loading}
-                        className="px-8 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 text-white font-semibold rounded-lg transition-colors flex items-center gap-2"
+                        className="px-8 py-3 bg-blue-600 hover:bg-blue-500 disabled:bg-blue-900/50 disabled:text-blue-400 text-white font-semibold rounded-lg transition-colors flex items-center gap-2 shadow-lg shadow-blue-500/20"
                     >
                         {loading ? (
                             <>

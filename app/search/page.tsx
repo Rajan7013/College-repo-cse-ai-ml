@@ -1,74 +1,168 @@
 'use client';
 
-import { useState } from 'react';
-import { Search, Filter, BookOpen, FileText, Video, Link as LinkIcon } from 'lucide-react';
+import { useState, useEffect, useCallback } from 'react';
+import SearchBar from '@/components/search/SearchBar';
+import FilterPanel from '@/components/search/FilterPanel';
+import SearchResults from '@/components/search/SearchResults';
+import { SearchFilters, searchResources } from '@/lib/actions/search';
+import { Resource } from '@/lib/actions/resources';
+import { Loader2, AlertCircle } from 'lucide-react';
 
-export default function SearchPage() {
-    const [query, setQuery] = useState('');
-    const [filter, setFilter] = useState<'all' | 'notes' | 'videos' | 'links'>('all');
+import { useSearchParams, useRouter } from 'next/navigation';
+
+import { Suspense } from 'react';
+
+function SearchPageContent() {
+    const searchParams = useSearchParams();
+    const router = useRouter();
+
+    // Initialize filters from URL params
+    const [filters, setFilters] = useState<SearchFilters>(() => ({
+        query: searchParams.get('query') || undefined,
+        regulation: searchParams.get('regulation') || undefined,
+        year: searchParams.get('year') ? parseInt(searchParams.get('year')!) : undefined,
+        semester: searchParams.get('semester') ? parseInt(searchParams.get('semester')!) : undefined,
+        branch: searchParams.get('branch') || undefined,
+        subject: searchParams.get('subject') || undefined,
+        unit: searchParams.get('unit') || undefined,
+        documentType: searchParams.get('documentType') || undefined,
+        fileType: searchParams.get('fileType') || undefined,
+    }));
+
+    const [resources, setResources] = useState<Resource[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [total, setTotal] = useState(0);
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [initialLoad, setInitialLoad] = useState(true);
+
+    const performSearch = useCallback(async (currentFilters: SearchFilters, currentPage: number = 1, append: boolean = false) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const result = await searchResources(currentFilters, { field: 'uploadedAt', direction: 'desc' }, currentPage);
+
+            if (append) {
+                setResources(prev => [...prev, ...result.resources]);
+            } else {
+                setResources(result.resources);
+            }
+
+            setTotal(result.total);
+            setHasMore(result.hasMore);
+        } catch (err) {
+            console.error('Search failed:', err);
+            setError('Failed to load resources. Please try again.');
+        } finally {
+            setLoading(false);
+            setInitialLoad(false);
+        }
+    }, []);
+
+    // Initial load
+    useEffect(() => {
+        performSearch(filters);
+    }, []); // Only run once on mount
+
+    const handleSearch = () => {
+        setPage(1);
+        performSearch(filters, 1, false);
+    };
+
+    const handleFilterChange = (newFilters: SearchFilters) => {
+        setFilters(newFilters);
+    };
+
+    const handleApplyFilters = () => {
+        setPage(1);
+        performSearch(filters, 1, false);
+    };
+
+    const handleLoadMore = () => {
+        const nextPage = page + 1;
+        setPage(nextPage);
+        performSearch(filters, nextPage, true);
+    };
+
+    const handleQueryChange = (query: string) => {
+        setFilters(prev => ({ ...prev, query }));
+    };
 
     return (
-        <div className="min-h-screen py-12 px-4">
-            <div className="max-w-6xl mx-auto">
-                {/* Header */}
-                <div className="glass-card p-8 mb-8">
-                    <div className="flex items-center gap-4 mb-4">
-                        <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center">
-                            <Search className="h-8 w-8 text-white" />
-                        </div>
-                        <div>
-                            <h1 className="text-5xl font-black text-white">Search Resources</h1>
-                            <p className="text-blue-200">Find study materials across all subjects and years</p>
+        <div className="min-h-screen bg-[#020617] py-8 px-4 md:px-6 lg:px-8 overflow-x-hidden selection:bg-blue-500/30">
+            {/* Background Ambience */}
+            <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+                <div className="absolute top-[-20%] left-[-20%] w-[80%] md:w-[40%] h-[80%] md:h-[40%] bg-blue-600/20 rounded-full blur-[80px] md:blur-[128px] animate-pulse"></div>
+                <div className="absolute bottom-[-20%] right-[-20%] w-[80%] md:w-[40%] h-[80%] md:h-[40%] bg-violet-600/10 rounded-full blur-[80px] md:blur-[128px] animate-pulse delay-1000"></div>
+            </div>
+
+            <div className="max-w-7xl mx-auto space-y-8 relative z-10">
+                {/* Header Section */}
+                <div className="text-center space-y-4 mb-12">
+                    <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight">
+                        Resource <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">Center</span>
+                    </h1>
+                    <p className="text-lg text-blue-200/80 max-w-2xl mx-auto">
+                        Find and access study materials, notes, videos, and more.
+                    </p>
+                </div>
+
+                {/* Search & Filter Section */}
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                    {/* Filters Sidebar - Mobile Collapsible */}
+                    <div className="lg:col-span-1">
+                        <div className="sticky top-24">
+                            <FilterPanel
+                                filters={filters}
+                                onChange={handleFilterChange}
+                                onApply={handleApplyFilters}
+                            />
                         </div>
                     </div>
 
-                    {/* Search Bar */}
-                    <div className="relative mt-6">
-                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-blue-300" />
-                        <input
-                            type="text"
-                            value={query}
-                            onChange={(e) => setQuery(e.target.value)}
-                            placeholder="Search by topic, subject, or keyword..."
-                            className="glass-input w-full pl-12 pr-4 py-4 text-lg"
+                    {/* Main Content */}
+                    <div className="lg:col-span-3 space-y-6">
+                        {/* Search Bar */}
+                        <div className="glass-card p-4 rounded-2xl shadow-sm border border-white/10">
+                            <SearchBar
+                                value={filters.query || ''}
+                                onChange={handleQueryChange}
+                                onSearch={handleSearch}
+                            />
+                        </div>
+
+                        {/* Error State */}
+                        {error && (
+                            <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 flex items-center gap-3 text-red-200">
+                                <AlertCircle className="h-5 w-5 flex-shrink-0" />
+                                <p>{error}</p>
+                            </div>
+                        )}
+
+                        {/* Results */}
+                        <SearchResults
+                            resources={resources}
+                            total={total}
+                            loading={loading}
+                            onLoadMore={handleLoadMore}
+                            hasMore={hasMore}
                         />
                     </div>
                 </div>
-
-                {/* Filters */}
-                <div className="flex flex-wrap gap-3 mb-8">
-                    {[
-                        { value: 'all', label: 'All Resources', icon: Filter },
-                        { value: 'notes', label: 'Notes & PDFs', icon: FileText },
-                        { value: 'videos', label: 'Videos', icon: Video },
-                        { value: 'links', label: 'Links', icon: LinkIcon }
-                    ].map((f) => {
-                        const Icon = f.icon;
-                        return (
-                            <button
-                                key={f.value}
-                                onClick={() => setFilter(f.value as any)}
-                                className={`px-6 py-3 rounded-xl font-bold transition-all flex items-center gap-2 ${filter === f.value
-                                        ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
-                                        : 'glass-card text-blue-200 hover:text-white hover:bg-white/10'
-                                    }`}
-                            >
-                                <Icon className="h-5 w-5" />
-                                {f.label}
-                            </button>
-                        );
-                    })}
-                </div>
-
-                {/* Results Placeholder */}
-                <div className="glass-card p-16 text-center">
-                    <BookOpen className="h-20 w-20 text-blue-400 mx-auto mb-4 opacity-50" />
-                    <h3 className="text-2xl font-bold text-white mb-2">Start Searching</h3>
-                    <p className="text-blue-200">
-                        Enter keywords to find notes, videos, and resources across all subjects
-                    </p>
-                </div>
             </div>
         </div>
+    );
+}
+
+export default function SearchPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-[#020617] flex items-center justify-center">
+                <Loader2 className="h-8 w-8 text-blue-500 animate-spin" />
+            </div>
+        }>
+            <SearchPageContent />
+        </Suspense>
     );
 }
