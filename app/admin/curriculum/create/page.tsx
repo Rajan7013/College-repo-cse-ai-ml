@@ -1,5 +1,8 @@
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+import { Suspense } from 'react';
+export const maxDuration = 60;
+
 import SubjectForm from '@/components/admin/SubjectForm';
 
 export default function CreateSubjectPage() {

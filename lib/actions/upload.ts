@@ -1,7 +1,6 @@
 'use server';
 
-// Allow up to 60 seconds for metadata operations (though client upload is separate)
-export const maxDuration = 60;
+
 
 import { auth } from '@clerk/nextjs/server';
 import { adminDb } from '@/lib/firebase-admin';

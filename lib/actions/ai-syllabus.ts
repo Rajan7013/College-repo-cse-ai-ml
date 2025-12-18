@@ -1,7 +1,6 @@
 'use server';
 
-// Allow up to 60 seconds for AI processing (Vercel Hobby Limit)
-export const maxDuration = 60;
+
 
 import { groqClient, GROQ_MODEL } from '../groq-ai';
 import { UnitTopic } from './curriculum';
