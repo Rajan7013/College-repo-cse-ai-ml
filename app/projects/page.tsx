@@ -1,4 +1,6 @@
 import { Suspense } from 'react';
+export const dynamic = 'force-dynamic';
+
 import { getPublishedProjects } from '@/lib/actions/projects';
 import ProjectsHero from '@/components/projects/ProjectsHero';
 import ProjectsGrid from '@/components/projects/ProjectsGrid';

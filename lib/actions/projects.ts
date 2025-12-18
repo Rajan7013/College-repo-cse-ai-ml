@@ -137,6 +137,7 @@ export async function getProjectById(id: string): Promise<Project | null> {
         }
 
         const data = doc.data();
+        if (!data) return null;
         return {
             id: doc.id,
             ...data,
@@ -170,6 +171,7 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
 
         const doc = snapshot.docs[0];
         const data = doc.data();
+        if (!data) return null;
 
         // Increment view count
         await doc.ref.update({ views: (data.views || 0) + 1 });

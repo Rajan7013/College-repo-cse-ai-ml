@@ -11,6 +11,12 @@ export interface Project {
 
     // Details
     description: string;
+    shortDescription?: string; // Brief summary for cards
+
+    // Project Metadata
+    mode?: 'Online' | 'Offline' | 'Hybrid';
+    duration?: string;
+
     features: string[]; // Array of feature points
     advantages: string[]; // Array of advantages
 
@@ -42,6 +48,12 @@ export interface Project {
 
     // Status
     status: 'draft' | 'published' | 'closed' | 'archived';
+
+    // Featured status
+    featured?: boolean;
+
+    // Derived or explicit registration status
+    registrationStatus?: 'open' | 'closed';
 
     // Registration
     registrationLink?: string; // Primary registration link

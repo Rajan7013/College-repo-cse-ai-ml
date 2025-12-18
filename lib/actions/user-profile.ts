@@ -114,7 +114,7 @@ export async function updateProfilePhoto(photoUrl: string): Promise<{ success: b
 /**
  * Submit feedback
  */
-export async function submitFeedback(data: FeedbackFormData): Promise<{ success: boolean; error?: string }> {
+export async function submitFeedback(data: Omit<FeedbackFormData, 'userId'>): Promise<{ success: boolean; error?: string }> {
     try {
         const { userId } = await auth();
 

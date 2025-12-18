@@ -6,7 +6,9 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { BookOpen, GraduationCap, ChevronRight, Settings, Sparkles } from 'lucide-react';
 import { REGULATIONS, YEARS } from '@/lib/constants';
 
-export default function ResourcesPage() {
+import { Suspense } from 'react';
+
+function ResourcesContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
 
@@ -122,5 +124,13 @@ export default function ResourcesPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function ResourcesPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-white">Loading Resources...</div>}>
+            <ResourcesContent />
+        </Suspense>
     );
 }

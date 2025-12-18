@@ -212,9 +212,9 @@ export default function AdvancedSearch({ onSearch }: AdvancedSearchProps) {
                         className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 text-sm"
                     >
                         <option value="">All Years</option>
-                        {YEARS.map(year => (
-                            <option key={year} value={year}>
-                                {year}{year === '1' ? 'st' : year === '2' ? 'nd' : year === '3' ? 'rd' : 'th'} Year
+                        {YEARS.map((yearItem) => (
+                            <option key={yearItem.value} value={yearItem.value}>
+                                {yearItem.label}
                             </option>
                         ))}
                     </select>

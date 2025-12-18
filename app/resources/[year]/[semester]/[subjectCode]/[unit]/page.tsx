@@ -8,8 +8,9 @@ import { getResources, type Resource } from '@/lib/actions/resources';
 import { DOCUMENT_TYPES, STATIC_SUBJECTS } from '@/lib/constants';
 import { DETAILED_SYLLABUS } from '@/lib/syllabus-data';
 
-export default function DocumentListPage({ params }: { params: Promise<{ year: string; semester: string; subjectCode: string; unit: string }> }) {
-    const { year, semester, subjectCode, unit } = use(params);
+import { Suspense } from 'react';
+
+function DocumentListContent({ year, semester, subjectCode, unit }: { year: string; semester: string; subjectCode: string; unit: string }) {
     const searchParams = useSearchParams();
     const regulation = searchParams.get('regulation') || 'R23';
     const decodedSubjectCode = decodeURIComponent(subjectCode);
@@ -78,8 +79,9 @@ export default function DocumentListPage({ params }: { params: Promise<{ year: s
     };
 
     // Get specific unit syllabus if available
-    const unitSyllabus = (unit !== 'all' && unit !== 'syllabus' && DETAILED_SYLLABUS[decodedSubjectCode]?.units[unit])
-        ? DETAILED_SYLLABUS[decodedSubjectCode].units[unit]
+    const unitNumber = parseInt(unit);
+    const unitSyllabus = (unit !== 'all' && unit !== 'syllabus' && !isNaN(unitNumber) && DETAILED_SYLLABUS[decodedSubjectCode]?.units[unitNumber])
+        ? DETAILED_SYLLABUS[decodedSubjectCode].units[unitNumber]
         : null;
 
     // Find Subject Name
@@ -224,5 +226,14 @@ export default function DocumentListPage({ params }: { params: Promise<{ year: s
                 )}
             </div>
         </div>
+    );
+}
+
+export default function DocumentListPage({ params }: { params: Promise<{ year: string; semester: string; subjectCode: string; unit: string }> }) {
+    const { year, semester, subjectCode, unit } = use(params);
+    return (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-white">Loading Documents...</div>}>
+            <DocumentListContent year={year} semester={semester} subjectCode={subjectCode} unit={unit} />
+        </Suspense>
     );
 }

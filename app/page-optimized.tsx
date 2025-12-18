@@ -172,36 +172,7 @@ export default function HomePage() {
                 </div>
             </section>
 
-            {/* Video Section - Lazy Loaded */}
-            <section className="relative z-10 py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-                <div className="max-w-full mx-auto">
-                    <div className="text-center mb-6">
-                        <div className="inline-block mb-2 px-3 py-1 rounded-full bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 text-blue-700 font-bold text-xs uppercase">
-                            Platform Overview
-                        </div>
-                        <h2 className="text-2xl md:text-4xl font-bold mb-3">
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600">Experience EduNexus</span>
-                        </h2>
-                        <p className="text-sm text-slate-900 max-w-2xl mx-auto">
-                            Watch how our platform revolutionizes academic resource management
-                        </p>
-                    </div>
 
-                    <div className="relative w-full h-[300px] lg:h-[400px] rounded-2xl overflow-hidden shadow-2xl border-2 border-blue-200/50 bg-slate-900">
-                        <video
-                            className="w-full h-full object-cover"
-                            autoPlay
-                            loop
-                            muted
-                            playsInline
-                            preload="metadata"
-                            loading="lazy"
-                        >
-                            <source src="/showcase-video.mp4" type="video/mp4" />
-                        </video>
-                    </div>
-                </div>
-            </section>
 
             {/* Stats Strip */}
             <div className="relative z-10 bg-slate-900 py-6 md:py-8">

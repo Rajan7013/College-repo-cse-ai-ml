@@ -6,12 +6,13 @@ import { useSearchParams } from 'next/navigation';
 import { Calendar, ChevronRight, ArrowLeft } from 'lucide-react';
 import { SEMESTERS } from '@/lib/constants';
 
-export default function SemesterPage({ params }: { params: Promise<{ year: string }> }) {
-    const { year } = use(params);
+import { Suspense } from 'react';
+
+function SemesterContent({ year }: { year: string }) {
     const searchParams = useSearchParams();
 
     // Get regulation from URL or default
-    const [regulation, setRegulation] = useState(searchParams.get('regulation') || 'R23');
+    const [regulation, setRegulation] = useState('R23');
 
     useEffect(() => {
         const reg = searchParams.get('regulation');
@@ -84,5 +85,14 @@ export default function SemesterPage({ params }: { params: Promise<{ year: strin
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function SemesterPage({ params }: { params: Promise<{ year: string }> }) {
+    const { year } = use(params);
+    return (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-white">Loading Semesters...</div>}>
+            <SemesterContent year={year} />
+        </Suspense>
     );
 }
