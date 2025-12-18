@@ -14,7 +14,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "EduNexus - Academic Repository",
+  title: "EduNexus",
   description: "A modern academic repository platform for educational resources",
   manifest: "/manifest.json",
   appleWebApp: {

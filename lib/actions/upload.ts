@@ -32,11 +32,11 @@ const ALLOWED_EXTENSIONS = [
 
 // File size limits (in bytes)
 const MAX_FILE_SIZE: Record<string, number> = {
-    'application/pdf': 50 * 1024 * 1024, // 50 MB
+    'application/pdf': 100 * 1024 * 1024, // 100 MB
     'image/jpeg': 10 * 1024 * 1024, // 10 MB
     'image/png': 10 * 1024 * 1024, // 10 MB
-    'application/vnd.ms-powerpoint': 50 * 1024 * 1024, // 50 MB
-    'application/vnd.openxmlformats-officedocument.presentationml.presentation': 50 * 1024 * 1024, // 50 MB
+    'application/vnd.ms-powerpoint': 100 * 1024 * 1024, // 100 MB
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation': 100 * 1024 * 1024, // 100 MB
     'application/msword': 25 * 1024 * 1024, // 25 MB
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 25 * 1024 * 1024, // 25 MB
 };

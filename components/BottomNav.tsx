@@ -1,80 +1,89 @@
 'use client';
 
 import Link from 'next/link';
-import { Home, Search, BookOpen, User, ShieldCheck } from 'lucide-react';
 import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { Home, BookOpen, Rocket, LayoutDashboard, Shield, MoreHorizontal, User } from 'lucide-react';
 import { useUser } from '@clerk/nextjs';
+import { useState, useEffect } from 'react';
 import { getUserRole } from '@/lib/actions/resources';
 
 export default function BottomNav() {
     const pathname = usePathname();
-    const { isSignedIn, user } = useUser();
+    const { isSignedIn } = useUser();
     const [userRole, setUserRole] = useState<string | null>(null);
 
     useEffect(() => {
         async function fetchRole() {
-            if (isSignedIn && user) {
+            if (isSignedIn) {
                 const role = await getUserRole();
                 setUserRole(role);
-            } else {
-                setUserRole(null);
             }
         }
         fetchRole();
-    }, [isSignedIn, user]);
+    }, [isSignedIn]);
 
-    const isActive = (path: string) => pathname === path;
+    const isActive = (path: string) => pathname === path || pathname.startsWith(path + '/');
 
     return (
-        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 pb-safe">
-            <div className="flex justify-around items-center h-16" style={{ fontFamily: 'var(--font-poppins)' }}>
+        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-[#0A1628]/95 backdrop-blur-lg border-t border-white/10 pb-safe z-50">
+            <div className="grid grid-cols-5 h-16 items-center px-2">
+                {/* Home */}
                 <Link
                     href="/"
-                    className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${isActive('/') ? 'text-blue-600' : 'text-gray-400 hover:text-gray-600'}`}
+                    className={`flex flex-col items-center justify-center space-y-1 ${isActive('/') && pathname === '/' ? 'text-blue-400' : 'text-slate-400'}`}
                 >
-                    <Home className={`h-6 w-6 ${isActive('/') ? 'fill-current' : ''}`} />
-                    <span className="text-[10px] font-semibold tracking-wide">Home</span>
+                    <Home size={20} className={isActive('/') && pathname === '/' ? 'fill-blue-400/20' : ''} />
+                    <span className="text-[10px] font-medium">Home</span>
                 </Link>
 
-                {isSignedIn ? (
-                    <>
-                        <Link
-                            href="/dashboard"
-                            className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${isActive('/dashboard') ? 'text-blue-600' : 'text-gray-400 hover:text-gray-600'}`}
-                        >
-                            <BookOpen className={`h-6 w-6 ${isActive('/dashboard') ? 'fill-current' : ''}`} />
-                            <span className="text-[10px] font-semibold tracking-wide">Resources</span>
-                        </Link>
+                {/* Resources */}
+                <Link
+                    href="/resources"
+                    className={`flex flex-col items-center justify-center space-y-1 ${isActive('/resources') ? 'text-blue-400' : 'text-slate-400'}`}
+                >
+                    <BookOpen size={20} className={isActive('/resources') ? 'fill-blue-400/20' : ''} />
+                    <span className="text-[10px] font-medium">Library</span>
+                </Link>
 
-                        {userRole === 'admin' && (
-                            <Link
-                                href="/admin/dashboard"
-                                className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${isActive('/admin/dashboard') ? 'text-blue-600' : 'text-gray-400 hover:text-gray-600'}`}
-                            >
-                                <ShieldCheck className={`h-6 w-6 ${isActive('/admin/dashboard') ? 'fill-current' : ''}`} />
-                                <span className="text-[10px] font-semibold tracking-wide">Admin</span>
-                            </Link>
-                        )}
+                {/* Projects */}
+                <Link
+                    href="/projects"
+                    className={`flex flex-col items-center justify-center space-y-1 ${isActive('/projects') ? 'text-cyan-400' : 'text-slate-400'}`}
+                >
+                    <Rocket size={20} className={isActive('/projects') ? 'fill-cyan-400/20' : ''} />
+                    <span className="text-[10px] font-medium">Projects</span>
+                </Link>
 
-                        <Link
-                            href="/profile"
-                            className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${isActive('/profile') ? 'text-blue-600' : 'text-gray-400 hover:text-gray-600'}`}
-                        >
-                            <User className={`h-6 w-6 ${isActive('/profile') ? 'fill-current' : ''}`} />
-                            <span className="text-[10px] font-semibold tracking-wide">Profile</span>
-                        </Link>
-                    </>
+                {/* Dashboard / Profile */}
+                <Link
+                    href="/dashboard"
+                    className={`flex flex-col items-center justify-center space-y-1 ${isActive('/dashboard') ? 'text-violet-400' : 'text-slate-400'}`}
+                >
+                    <LayoutDashboard size={20} className={isActive('/dashboard') ? 'fill-violet-400/20' : ''} />
+                    <span className="text-[10px] font-medium">Dash</span>
+                </Link>
+
+                {/* Admin or Menu */}
+                {userRole === 'admin' ? (
+                    <Link
+                        href="/admin/dashboard"
+                        className={`flex flex-col items-center justify-center space-y-1 ${isActive('/admin') ? 'text-rose-400' : 'text-slate-400'}`}
+                    >
+                        <Shield size={20} className={isActive('/admin') ? 'fill-rose-400/20' : ''} />
+                        <span className="text-[10px] font-medium">Admin</span>
+                    </Link>
                 ) : (
                     <Link
-                        href="/sign-in"
-                        className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${isActive('/sign-in') ? 'text-blue-600' : 'text-gray-400 hover:text-gray-600'}`}
+                        href="/profile"
+                        className={`flex flex-col items-center justify-center space-y-1 ${isActive('/profile') ? 'text-blue-400' : 'text-slate-400'}`}
                     >
-                        <User className={`h-6 w-6 ${isActive('/sign-in') ? 'fill-current' : ''}`} />
-                        <span className="text-[10px] font-semibold tracking-wide">Sign In</span>
+                        <User size={20} className={isActive('/profile') ? 'fill-blue-400/20' : ''} />
+                        <span className="text-[10px] font-medium">Profile</span>
                     </Link>
                 )}
             </div>
+            {/* Safe area spacing for generic mobile/iOS bottom bar */}
+            <div className="h-[env(safe-area-inset-bottom)] bg-[#0A1628]"></div>
         </div>
     );
 }

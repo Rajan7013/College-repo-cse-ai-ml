@@ -1,82 +1,130 @@
-# 🎓 EduNexus - Academic Repository Platform
+# 🎓 EduNexus - Academic Resource Management System
 
-![EduNexus Banner](/public/banner-placeholder.png)
+> **Revolutionizing Academic Resource Sharing with Modern Web Technologies.**
 
-## 📖 Overview
-
-**EduNexus** is a modern, full-stack academic repository platform designed for B.Tech CSE (AI & ML) students. It serves as a centralized hub for accessing, sharing, and managing educational resources like notes, question papers, lab manuals, and projects.
-
-Built with **Next.js 16**, **Clerk Authentication**, and **Firebase**, it offers a secure, high-performance experience with "Military-Grade" security including role-based access control (Admin/Student).
-
----
-
-## ✨ Features
-
-### 👩‍🎓 Student Features
-*   **📚 Resource Access:** View/Download Notes, Question Papers, Lab Manuals, Assignments.
-*   **🔍 Advanced Search:** Filter by Regulation, Year, Semester, Subject Code, Unit, and Document Type.
-*   **📂 Multi-Format Support:** In-browser viewing for PDF, Images, PowerPoint (PPT/PPTX), and Word (DOC/DOCX).
-*   **👤 Student Profile:** Manage bio, profile picture, favorites, recently viewed items, and download history.
-*   **📱 Responsive:** Optimized for both desktop and mobile devices.
-
-### 👨‍🏫 Admin Features
-*   **🛡️ Admin Dashboard:** Complete overview of platform stats (Total Users, Resources, Charts).
-*   **📤 Resource Management:** Upload files to **Cloudflare R2** with metadata stored in **Firestore**.
-*   **👥 User Management:** View all users, block/unblock accounts, and manage roles.
-*   **📊 Analytics:** Track resource distribution by branch, type, and regulation.
+## 📖 Table of Contents
+1.  [Project Overview](#-project-overview)
+2.  [Problem & Solution](#-problem--solution)
+3.  [✨ Key Features](#-key-features)
+4.  [🛠️ Technology Stack (Deep Dive)](#%EF%B8%8F-technology-stack-deep-dive)
+5.  [📂 Project Structure](#-project-structure)
+6.  [⚙️ Installation & Setup](#%EF%B8%8F-installation--setup)
+7.  [🔒 Security & Roles](#-security--roles)
+8.  [📊 Analytics System](#-analytics-system)
 
 ---
 
-## 🛠️ Tech Stack & Architecture
+## 🚀 Project Overview
+**EduNexus** is a high-performance, centralized platform designed for educational institutions to manage, share, and track academic resources (Notes, Lab Manuals, Question Papers). Built with **Next.js 14**, it offers a premium, app-like experience with a unified "Glassmorphism" Design System.
 
-### **Frontend**
-*   **Framework:** [Next.js 16 (App Router)](https://nextjs.org/)
-*   **Language:** TypeScript
-*   **Styling:** Tailwind CSS + Custom Animations (Poppins Font)
-*   **Icons:** Lucide React
-*   **Authentication:** [Clerk](https://clerk.com/)
+**Live Demo**: [Deployed URL Here]
 
-### **Backend & Storage**
-*   **Database:** Google Firebase Firestore
-*   **File Storage:** Cloudflare R2 (S3-compatible object storage)
-*   **Server Actions:** Next.js Server Actions (using Firebase Admin SDK)
-*   **Security:** Firestore Security Rules + Server-side Role Verification
+## 💡 Problem & Solution
+
+### The Problem
+*   **Fragmentation**: Students struggle to find accurate notes, often shifting between WhatsApp groups, Drive links, and photocopy shops.
+*   **Lack of Analytics**: Admins have no visibility into which resources are actually useful or popular.
+*   **Poor UX**: Traditional college portals are clunky, slow, and mobile-unfriendly.
+
+### The Solution (EduNexus)
+*   **Centralized Hub**: A single, searchable repository for all branches, semesters, and subjects.
+*   **Role-Based Control**: Strict hierarchy (SuperAdmin > Admin > Student) ensures content quality.
+*   **Behavior Tracking**: Detailed analytics on what students view and search for.
+*   **Lightning Speed**: Optimized with Server-Side Caching (ISR) and Edge delivery.
+
+---
+
+## ✨ Key Features
+
+### 1. 🛡️ Role-Based Access Control (RBAC)
+*   **SuperAdmin**: The Root User (Hardcoded Security). Can manage Admins.
+*   **Admin**: Can upload resources, manage curriculums, and view analytics.
+*   **Student**: Can view, search, and download resources.
+*   **Auto-Sync**: Google Profile Pictures and Names are automatically synced on login.
+
+### 2. 📂 Smart Resource Management
+*   **Cloud Storage**: Files are stored in **Cloudflare R2** (S3-compatible) for zero-egress fees and high speed.
+*   **Metadata Engine**: Resources are tagged by Regulation (R24, R22), Year, Branch, and Subject Code.
+*   **Interactive Viewers**: Built-in PDF and Office document viewers (no need to download to view).
+
+### 3. 📈 Behavior Analytics Dashboard
+*   **Real-Time Logging**: Tracks every View, Search, and Download.
+*   **Engagement Metrics**: See "Top 5 Active Students", "Most Popular Documents".
+*   **Duration Tracking**: Estimates how long a student spends reading a document.
+
+### 4. 🎨 Premium UI/UX
+*   **Glassmorphism**: Modern, translucent aesthetics using backdrop-blur.
+*   **Responsive**: Fully optimized for Mobile, Tablet, and Desktop.
+*   **Global Theme**: Consistent Blue/Cyan gradient theme across the app.
+
+---
+
+## 🛠️ Technology Stack (Deep Dive)
+
+We chose this stack to ensure **Scaler, Speed, and Security**.
+
+### 1. Frontend: Next.js 14 (App Router)
+*   **What it is**: The React framework for the web using Server Components.
+*   **Why we chose it**: 
+    *   **RSC (React Server Components)**: Logic runs on the server, reducing the JS bundle sent to the phone (faster load).
+    *   **SEO**: Content is rendered on the server, making it indexable by Google.
+    *   **ISR (Incremental Static Regeneration)**: Caches pages like the Dashboard for 60s to handle high traffic instantly.
+
+### 2. Styling: Tailwind CSS v4
+*   **What it is**: A utility-first CSS framework.
+*   **Why we chose it**: 
+    *   **Design System**: Allows defining a global "Blue Theme" in one place.
+    *   **Performance**: Generates only the CSS used in the project (Tiny CSS file).
+
+### 3. Database: Firebase Firestore (NoSQL)
+*   **What it is**: A flexible, scalable NoSQL cloud database.
+*   **Why we chose it**: 
+    *   **Real-time capabilities**: Instant updates for whitelists and settings.
+    *   **Schema-less**: Easy to adapt when adding new features like "Analytics Logs" without breaking old data.
+
+### 4. Authentication: Clerk
+*   **What it is**: Use Management Platform.
+*   **Why we chose it**: 
+    *   **Security**: Handles session management, MFA, and Google (OAuth) logins securely.
+    *   **Developer Experience**: Saves 100+ hours of building login forms.
+
+### 5. Storage: Cloudflare R2
+*   **What it is**: Object Storage (like AWS S3).
+*   **Why we chose it**: **Zero Egress Fees**. Unlike AWS, we don't pay when students download files. Best for academic distribution.
 
 ---
 
 ## 📂 Project Structure
 
 ```bash
-college/
-├── app/
-│   ├── admin/              # Admin-only routes (Dashboard, Upload)
-│   ├── dashboard/          # Student resource discovery
-│   ├── profile/            # User profile management
-│   ├── sign-in/            # Clerk auth pages
-│   ├── globals.css         # Global styles & animations
-│   ├── layout.tsx          # Root layout with Navbar & Auth
-│   └── page.tsx            # Landing page
-├── components/             # Reusable UI components
-│   ├── AdvancedSearch.tsx  # Filtering & Search UI
-│   ├── Navbar.tsx          # Responsive navigation
-│   ├── PDFViewer.tsx       # PDF rendering component
-│   ├── UserActions.tsx     # Admin user management buttons
-│   └── ...
-├── lib/
-│   ├── actions/            # Server Actions (Business Logic)
-│   │   ├── admin.ts        # Admin stats logic
-│   │   ├── resources.ts    # Resource fetching
-│   │   ├── upload.ts       # File upload (Admin SDK)
-│   │   ├── users.ts        # User management
-│   │   └── user.ts         # User sync
-│   ├── firebase-admin.ts   # Firebase Admin SDK init
-│   └── firebase.ts         # Firebase Client SDK init
-└── public/                 # Static assets
+/college
+├── /app                  # Next.js App Router (Pages & API Routes)
+│   ├── /admin            # Admin Dashboard, Upload, Analytics Pages
+│   ├── /resources        # Public Resource Listing & Viewing
+│   ├── /api              # Backend API Endpoints (Webhooks, etc.)
+│   └── globals.css       # Global Tailwind Styles & Glassmorphism classes
+├── /components           # Reusable UI Components
+│   ├── /admin            # Admin-specific components (UserRoleManager, Analytics)
+│   ├── /search           # SearchBar with Debounce & Logging
+│   └── ResourceCard.tsx  # Display component for files
+├── /lib                  # Backend Logic & Utilities
+│   ├── /actions          # Server Actions (The "Backend" API layer)
+│   │   ├── admin.ts      # Cached Dashboard Stats
+│   │   ├── analytics.ts  # Logging & Stats Logic
+│   │   └── users.ts      # Role Management Logic
+│   └── firebase.ts       # Database Clients
+└── /public               # Static Assets
 ```
 
 ---
 
-## 🚀 Getting Started
+## ⚙️ Installation & Setup
+
+Follow these steps to deploy your own instance.
+
+### Prerequisites
+*   Node.js 18+
+*   npm or yarn
 
 ### 1. Clone the Repository
 ```bash
@@ -89,59 +137,58 @@ cd edunexus
 npm install
 ```
 
-### 3. Environment Setup
-Create a `.env.local` file in the root directory and add the following keys:
+### 3. Environment Variables (.env.local)
+Create a `.env.local` file in the root. **This is CRITICAL**. Do not reveal these keys.
 
 ```env
 # Clerk Auth
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
 CLERK_SECRET_KEY=sk_test_...
 
-# Firebase Client (from console)
-NEXT_PUBLIC_FIREBASE_API_KEY=AIza...
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=...
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=...
-# ... other firebase config
-
-# Firebase Admin (from service-account.json)
-FIREBASE_CLIENT_EMAIL=...
+# Firebase Admin (Backend Access)
+# Download service-account.json or use these vars
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=college-db-xxx
+FIREBASE_CLIENT_EMAIL=firebase-adminsdk-xxx@...
 FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----..."
 
-# Cloudflare R2
-R2_ACCOUNT_ID=...
+# Cloudflare R2 (Storage)
 R2_ACCESS_KEY_ID=...
 R2_SECRET_ACCESS_KEY=...
-R2_BUCKET_NAME=...
-NEXT_PUBLIC_R2_PUBLIC_URL=...
+R2_BUCKET_NAME=college-resources
+R2_ACCOUNT_ID=...
+NEXT_PUBLIC_R2_PUBLIC_URL=https://pub-xxx.r2.dev
 ```
 
-### 4. Run Development Server
+### 4. Run Locally
 ```bash
 npm run dev
 ```
-Open [http://localhost:3000](http://localhost:3000) to view the app.
 
 ---
 
-## 🔐 Security Information
+## 🔒 Security & Roles
 
-*   **Role-Based Access:** All sensitive Server Actions use `firebase-admin` to bypass client-side rules but manually verify `userId` and `role` from Firestore before execution.
-*   **Firestore Rules:** Client-side read/write is restricted. Only authenticated users can read. Writes are handled via Server Actions.
-*   **Environment Variables:** Sensitive keys (service account, secrets) are never exposed to the client.
+### The "SuperAdmin"
+*   **Identity**: `rajanprasaila@gmail.com` (Hardcoded protection).
+*   **Powers**:
+    1.  Only user who can **Delete Admins**.
+    2.  Immune to Deletion/Blocking/Role Changes (Backend protected).
+    3.  Frontend buttons are hidden for this user.
+
+### Role Management
+*   **Whitelist System**: Admins add users by email.
+*   **Logic**: 
+    *   If Email in Whitelist -> Assign Role.
+    *   If Email NOT in Whitelist -> Assign 'Student'.
+    *   Removed from Whitelist -> Instant Downgrade to 'Student'.
 
 ---
 
-## 📦 Deployment
-
-This project is optimized for deployment on **Vercel**.
-
-1.  Push code to GitHub.
-2.  Import project into Vercel.
-3.  Add all environment variables from `.env.local` to Vercel settings.
-4.  Deploy! 🚀
+## 📊 Analytics System
+*   **Tech**: Custom Event Logging to Firestore `analytics_logs`.
+*   **Privacy**: Logs user Email, Action (View/Search), and Timestamp.
+*   **Performance**: Aggregates are cached for 60 seconds to prevent database overload.
 
 ---
 
-## 📜 License
-
-This project is licensed under the MIT License.
+**Developed with by Rajan Prasaila Yadav**

@@ -28,6 +28,8 @@ export interface ResourceFilters {
     regulation?: string;
     year?: number;
     semester?: number;
+    subjectCode?: string;
+    unit?: number | string;
 }
 
 /**
@@ -54,6 +56,13 @@ export async function getResources(filters?: ResourceFilters): Promise<Resource[
         }
         if (filters?.semester) {
             query = query.where('semester', '==', filters.semester);
+        }
+        if (filters?.subjectCode) {
+            query = query.where('subjectCode', '==', filters.subjectCode);
+        }
+        // Note: 'unit' might need careful handling if mixed types (number vs string 'all') are stored
+        if (filters?.unit !== undefined) {
+            query = query.where('unit', '==', filters.unit);
         }
 
         // Order by uploadedAt desc

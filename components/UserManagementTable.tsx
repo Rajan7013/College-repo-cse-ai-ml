@@ -22,7 +22,7 @@ export default function UserManagementTable() {
     if (loading) {
         return (
             <div className="flex items-center justify-center py-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-400"></div>
             </div>
         );
     }
@@ -30,54 +30,55 @@ export default function UserManagementTable() {
     return (
         <div className="overflow-x-auto">
             <table className="w-full">
-                <thead className="bg-gray-50 border-b border-gray-200">
+                <thead className="border-b border-blue-500/20">
                     <tr>
-                        <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">User</th>
-                        <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">Role</th>
-                        <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">Status</th>
-                        <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">Joined</th>
-                        <th className="text-center py-3 px-4 text-sm font-semibold text-gray-700">Actions</th>
+                        <th className="text-left py-4 px-4 text-xs font-bold text-blue-300 uppercase tracking-wider">User</th>
+                        <th className="text-left py-4 px-4 text-xs font-bold text-blue-300 uppercase tracking-wider">Role</th>
+                        <th className="text-left py-4 px-4 text-xs font-bold text-blue-300 uppercase tracking-wider">Status</th>
+                        <th className="text-left py-4 px-4 text-xs font-bold text-blue-300 uppercase tracking-wider">Joined</th>
+                        <th className="text-center py-4 px-4 text-xs font-bold text-blue-300 uppercase tracking-wider">Actions</th>
                     </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200">
+                <tbody className="divide-y divide-blue-500/10">
                     {users.map((userData) => {
                         const isCurrentUser = currentUser?.id === userData.id;
                         return (
-                            <tr key={userData.id} className="hover:bg-gray-50">
-                                <td className="py-3 px-4">
+                            <tr key={userData.id} className="hover:bg-white/5 transition-colors">
+                                <td className="py-4 px-4">
                                     <div>
-                                        <p className="font-medium text-gray-900">{userData.profile.displayName}</p>
-                                        <p className="text-sm text-gray-500">{userData.email}</p>
+                                        <p className="font-bold text-white mb-0.5">{userData.profile.displayName}</p>
+                                        <p className="text-sm text-blue-300">{userData.email}</p>
                                         {userData.profile.rollNumber && (
-                                            <p className="text-xs text-gray-400">{userData.profile.rollNumber}</p>
+                                            <p className="text-xs text-blue-400/70 font-mono mt-0.5">{userData.profile.rollNumber}</p>
                                         )}
                                     </div>
                                 </td>
-                                <td className="py-3 px-4">
-                                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${userData.role === 'admin'
-                                            ? 'bg-purple-100 text-purple-800'
-                                            : 'bg-blue-100 text-blue-800'
+                                <td className="py-4 px-4">
+                                    <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold border ${userData.role === 'admin'
+                                        ? 'bg-purple-500/20 text-purple-300 border-purple-500/30'
+                                        : 'bg-blue-500/20 text-blue-300 border-blue-500/30'
                                         }`}>
                                         {userData.role === 'admin' ? '👑 Admin' : '🎓 Student'}
                                     </span>
                                     {isCurrentUser && (
-                                        <span className="ml-2 text-xs text-gray-500">(You)</span>
+                                        <span className="ml-2 text-xs text-cyan-400 font-bold">(You)</span>
                                     )}
                                 </td>
-                                <td className="py-3 px-4">
-                                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${userData.blocked
-                                            ? 'bg-red-100 text-red-800'
-                                            : 'bg-green-100 text-green-800'
+                                <td className="py-4 px-4">
+                                    <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold border ${userData.blocked
+                                        ? 'bg-red-500/20 text-red-300 border-red-500/30'
+                                        : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
                                         }`}>
                                         {userData.blocked ? '🚫 Blocked' : '✓ Active'}
                                     </span>
                                 </td>
-                                <td className="py-3 px-4 text-sm text-gray-500">
+                                <td className="py-4 px-4 text-sm text-blue-200">
                                     {new Date(userData.createdAt).toLocaleDateString()}
                                 </td>
-                                <td className="py-3 px-4">
+                                <td className="py-4 px-4">
                                     <UserActions
                                         userId={userData.id}
+                                        userEmail={userData.email}
                                         currentRole={userData.role}
                                         isBlocked={userData.blocked || false}
                                         isCurrentUser={isCurrentUser}
@@ -90,7 +91,7 @@ export default function UserManagementTable() {
             </table>
 
             {users.length === 0 && (
-                <div className="text-center py-8 text-gray-500">
+                <div className="text-center py-8 text-blue-300">
                     No users found
                 </div>
             )}

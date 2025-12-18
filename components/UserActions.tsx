@@ -7,14 +7,24 @@ import { useRouter } from 'next/navigation';
 
 interface UserActionsProps {
     userId: string;
+    userEmail: string;
     currentRole: 'admin' | 'student';
     isBlocked: boolean;
     isCurrentUser: boolean;
 }
 
-export default function UserActions({ userId, currentRole, isBlocked, isCurrentUser }: UserActionsProps) {
+export default function UserActions({ userId, userEmail, currentRole, isBlocked, isCurrentUser }: UserActionsProps) {
     const [loading, setLoading] = useState(false);
     const router = useRouter();
+
+    // Protect SuperAdmin from any actions
+    if (userEmail === 'rajanprasaila@gmail.com') {
+        return (
+            <div className="flex items-center justify-center" title="Super Admin (Protected)">
+                <Shield className="h-5 w-5 text-amber-500" />
+            </div>
+        );
+    }
 
     const handleRoleChange = async () => {
         if (isCurrentUser) {
@@ -81,7 +91,7 @@ export default function UserActions({ userId, currentRole, isBlocked, isCurrentU
     if (loading) {
         return (
             <div className="flex items-center justify-center">
-                <Loader2 className="h-5 w-5 text-gray-400 animate-spin" />
+                <Loader2 className="h-5 w-5 text-cyan-400 animate-spin" />
             </div>
         );
     }
@@ -92,9 +102,9 @@ export default function UserActions({ userId, currentRole, isBlocked, isCurrentU
             <button
                 onClick={handleRoleChange}
                 disabled={isCurrentUser}
-                className={`p-1.5 rounded transition-colors ${currentRole === 'admin'
-                        ? 'text-purple-600 hover:bg-purple-50'
-                        : 'text-gray-600 hover:bg-gray-50'
+                className={`p-1.5 rounded-lg transition-colors ${currentRole === 'admin'
+                    ? 'text-purple-300 hover:bg-purple-500/20'
+                    : 'text-blue-200 hover:bg-blue-500/20'
                     } disabled:opacity-30 disabled:cursor-not-allowed`}
                 title={isCurrentUser ? 'Cannot change own role' : currentRole === 'admin' ? 'Demote to Student' : 'Promote to Admin'}
             >
@@ -109,9 +119,9 @@ export default function UserActions({ userId, currentRole, isBlocked, isCurrentU
             <button
                 onClick={handleToggleBlock}
                 disabled={isCurrentUser}
-                className={`p-1.5 rounded transition-colors ${isBlocked
-                        ? 'text-green-600 hover:bg-green-50'
-                        : 'text-orange-600 hover:bg-orange-50'
+                className={`p-1.5 rounded-lg transition-colors ${isBlocked
+                    ? 'text-emerald-400 hover:bg-emerald-500/20'
+                    : 'text-amber-400 hover:bg-amber-500/20'
                     } disabled:opacity-30 disabled:cursor-not-allowed`}
                 title={isCurrentUser ? 'Cannot block yourself' : isBlocked ? 'Unblock User' : 'Block User'}
             >
@@ -126,7 +136,7 @@ export default function UserActions({ userId, currentRole, isBlocked, isCurrentU
             <button
                 onClick={handleDelete}
                 disabled={isCurrentUser}
-                className="p-1.5 text-red-600 hover:bg-red-50 rounded transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                className="p-1.5 text-rose-400 hover:bg-rose-500/20 rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                 title={isCurrentUser ? 'Cannot delete yourself' : 'Delete User'}
             >
                 <Trash2 className="h-4 w-4" />

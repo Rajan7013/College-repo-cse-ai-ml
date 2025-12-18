@@ -29,13 +29,13 @@ export default function DeleteButton({ resourceId }: { resourceId: string }) {
         <button
             onClick={handleDelete}
             disabled={deleting}
-            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
+            className="p-2 text-rose-400 hover:bg-rose-500/10 rounded-lg transition-colors disabled:opacity-50"
             title="Delete"
         >
             {deleting ? (
                 <Loader2 className="h-5 w-5 animate-spin" />
             ) : (
-                <Trash2 className="h-5 w-5" />
+                <Trash2 className="h-4 w-4" />
             )}
         </button>
     );

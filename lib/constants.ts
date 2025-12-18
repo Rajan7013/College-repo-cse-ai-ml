@@ -8,16 +8,6 @@ export const BRANCHES = [
     { value: 'CIVIL', label: 'Civil' },
 ];
 
-// For Upload, we might need a version without "All Branches", but typically select dropdowns handle that. 
-// We will export a generic list and let components filter/slice if they need "All" or not.
-// Actually, to match existing exactly:
-// Search uses "All Branches" as default. Upload uses "Select Branch" as default prompt.
-// We can export the core data and let components add the default option, OR export consistent lists.
-// Looking at previous code: 
-// Search: { value: '', label: 'All Branches' } + others
-// Upload: { value: 'CSE_AI_ML', label: 'CSE (AI & ML)' } ... (No empty value in list, just placeholder option)
-
-// Decision: Export the core list of valid values. Components add their specific placeholder/all option.
 export const BRANCH_OPTIONS = [
     { value: 'CSE_AI_ML', label: 'CSE (AI & ML)' },
     { value: 'CSE', label: 'Computer Science' },
@@ -27,7 +17,7 @@ export const BRANCH_OPTIONS = [
     { value: 'CIVIL', label: 'Civil' },
 ];
 
-export const REGULATIONS = ['R23', 'R25', 'R27', 'R29', 'Others'];
+export const REGULATIONS = ['R23', 'R25', 'R26', 'Other'];
 
 export const DOCUMENT_TYPES = [
     'Notes',
@@ -41,6 +31,7 @@ export const DOCUMENT_TYPES = [
     'Assignment',
     'Project',
     'Study Material',
+    'Syllabus',
 ];
 
 export const UNITS = [
@@ -49,6 +40,7 @@ export const UNITS = [
     { value: '3', label: 'Unit 3' },
     { value: '4', label: 'Unit 4' },
     { value: '5', label: 'Unit 5' },
+    { value: '6', label: 'Unit 6' },
     { value: 'all', label: 'General (All Units)' },
 ];
 
@@ -59,7 +51,12 @@ export const FILE_TYPES = [
     { value: 'Word', label: 'Word Documents' },
 ];
 
-export const YEARS = ['1', '2', '3', '4'];
+export const YEARS = [
+    { value: 1, label: '1st Year', courses: 'B.Tech CSE (AI & ML)' },
+    { value: 2, label: '2nd Year', courses: 'B.Tech CSE (AI & ML)' },
+    { value: 3, label: '3rd Year', courses: 'B.Tech CSE (AI & ML)' },
+    { value: 4, label: '4th Year', courses: 'B.Tech CSE (AI & ML)' },
+];
 
 export const SEMESTERS = ['1', '2'];
 
@@ -71,3 +68,7 @@ export const SORT_OPTIONS = [
     { value: 'size-desc', label: 'Largest Files' },
     { value: 'size-asc', label: 'Smallest Files' },
 ];
+
+export const STATIC_SUBJECTS: Record<string, Array<{ code: string; name: string }>> = {};
+
+export const SUBJECT_UNIT_DETAILS: Record<string, Record<string, string>> = {};

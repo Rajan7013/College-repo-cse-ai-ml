@@ -1,11 +1,13 @@
 import { getAdminStats } from '@/lib/actions/admin';
 import { getUserRole } from '@/lib/actions/resources';
 import { redirect } from 'next/navigation';
-import { BarChart3, Users, FileText, Upload, TrendingUp, Clock } from 'lucide-react';
+import { BarChart3, Users, FileText, Upload, TrendingUp, Clock, ShieldCheck, GraduationCap } from 'lucide-react';
 import Link from 'next/link';
 
 import DeleteButton from '@/components/DeleteButton';
 import UserManagementTable from '@/components/UserManagementTable';
+import AnalyticsDashboard from '@/components/admin/AnalyticsDashboard';
+import UserRoleManager from '@/components/admin/UserRoleManager';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,7 +22,7 @@ export default async function AdminDashboardPage() {
     const stats = await getAdminStats();
 
     if (!stats) {
-        return <div>Error loading stats</div>;
+        return <div className="p-8 text-white">Error loading stats</div>;
     }
 
     const getBranchLabel = (branch: string) => {
@@ -36,82 +38,127 @@ export default async function AdminDashboardPage() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 py-8 px-4">
+        <div className="min-h-screen py-8 px-4">
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
-                <div className="mb-8">
-                    <h1 className="text-4xl font-bold text-gray-900 mb-2">Admin Dashboard</h1>
-                    <p className="text-gray-600">Overview of your academic resource repository</p>
+                <div className="mb-12 glass-card p-8 bg-gradient-to-r from-blue-900/40 to-slate-900/40">
+                    <div className="flex items-center gap-4 mb-2">
+                        <div className="p-3 bg-blue-500/20 rounded-xl border border-blue-500/30">
+                            <ShieldCheck className="h-8 w-8 text-cyan-400" />
+                        </div>
+                        <div>
+                            <h1 className="text-4xl font-black text-white">Admin Dashboard</h1>
+                            <p className="text-blue-200">Overview of your academic resource repository</p>
+                        </div>
+                    </div>
                 </div>
 
                 {/* Stats Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     {/* Total Resources */}
-                    <div className="bg-white rounded-xl shadow-lg p-6">
-                        <div className="flex items-center justify-between mb-4">
-                            <div className="p-3 bg-blue-100 rounded-lg">
-                                <FileText className="h-8 w-8 text-blue-600" />
-                            </div>
-                            <TrendingUp className="h-5 w-5 text-green-500" />
+                    <div className="glass-card p-6 relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                            <FileText className="h-16 w-16 text-blue-400" />
                         </div>
-                        <h3 className="text-3xl font-bold text-gray-900 mb-1">
+                        <div className="flex items-center justify-between mb-4 relative z-10">
+                            <div className="p-3 bg-blue-500/20 rounded-xl border border-blue-500/30">
+                                <FileText className="h-8 w-8 text-cyan-400" />
+                            </div>
+                            <span className="flex items-center gap-1 text-emerald-400 text-xs font-bold bg-emerald-500/10 px-2 py-1 rounded-lg border border-emerald-500/20">
+                                <TrendingUp className="h-3 w-3" />
+                                +12%
+                            </span>
+                        </div>
+                        <h3 className="text-3xl font-black text-white mb-1 relative z-10">
                             {stats.totalResources}
                         </h3>
-                        <p className="text-sm text-gray-600">Total Resources</p>
+                        <p className="text-sm text-blue-300 relative z-10">Total Resources</p>
                     </div>
 
                     {/* Total Users */}
-                    <div className="bg-white rounded-xl shadow-lg p-6">
-                        <div className="flex items-center justify-between mb-4">
-                            <div className="p-3 bg-green-100 rounded-lg">
-                                <Users className="h-8 w-8 text-green-600" />
-                            </div>
-                            <TrendingUp className="h-5 w-5 text-green-500" />
+                    <div className="glass-card p-6 relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                            <Users className="h-16 w-16 text-emerald-400" />
                         </div>
-                        <h3 className="text-3xl font-bold text-gray-900 mb-1">
+                        <div className="flex items-center justify-between mb-4 relative z-10">
+                            <div className="p-3 bg-emerald-500/20 rounded-xl border border-emerald-500/30">
+                                <Users className="h-8 w-8 text-emerald-400" />
+                            </div>
+                            <span className="flex items-center gap-1 text-emerald-400 text-xs font-bold bg-emerald-500/10 px-2 py-1 rounded-lg border border-emerald-500/20">
+                                <TrendingUp className="h-3 w-3" />
+                                +5%
+                            </span>
+                        </div>
+                        <h3 className="text-3xl font-black text-white mb-1 relative z-10">
                             {stats.totalUsers}
                         </h3>
-                        <p className="text-sm text-gray-600">Registered Users</p>
-                    </div>
-
-                    {/* Document Types */}
-                    <div className="bg-white rounded-xl shadow-lg p-6">
-                        <div className="flex items-center justify-between mb-4">
-                            <div className="p-3 bg-purple-100 rounded-lg">
-                                <BarChart3 className="h-8 w-8 text-purple-600" />
-                            </div>
-                        </div>
-                        <h3 className="text-3xl font-bold text-gray-900 mb-1">
-                            {Object.keys(stats.resourcesByType).length}
-                        </h3>
-                        <p className="text-sm text-gray-600">Document Types</p>
+                        <p className="text-sm text-blue-300 relative z-10">Registered Users</p>
                     </div>
 
                     {/* Quick Upload */}
                     <Link href="/admin/upload">
-                        <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer">
-                            <div className="flex items-center justify-between mb-4">
-                                <div className="p-3 bg-white bg-opacity-20 rounded-lg">
+                        <div className="btn-gradient p-6 rounded-xl shadow-lg h-full flex flex-col justify-between hover:scale-[1.02] transition-transform cursor-pointer relative overflow-hidden">
+                            <div className="absolute inset-0 bg-white/10 opacity-0 hover:opacity-100 transition-opacity"></div>
+                            <div className="flex items-center justify-between mb-4 relative z-10">
+                                <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
                                     <Upload className="h-8 w-8 text-white" />
                                 </div>
                             </div>
-                            <h3 className="text-2xl font-bold text-white mb-1">
-                                Upload
-                            </h3>
-                            <p className="text-sm text-blue-100">Add New Resource</p>
+                            <div className="relative z-10">
+                                <h3 className="text-2xl font-black text-white mb-1">
+                                    Upload
+                                </h3>
+                                <p className="text-sm text-blue-100 font-medium">Add New Resource</p>
+                            </div>
                         </div>
                     </Link>
+
+                    {/* Curriculum Manager */}
+                    <Link href="/admin/curriculum">
+                        <div className="bg-gradient-to-br from-indigo-600 to-purple-600 p-6 rounded-xl shadow-lg h-full flex flex-col justify-between hover:scale-[1.02] transition-transform cursor-pointer relative overflow-hidden border border-white/10">
+                            <div className="absolute inset-0 bg-white/10 opacity-0 hover:opacity-100 transition-opacity"></div>
+                            <div className="flex items-center justify-between mb-4 relative z-10">
+                                <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
+                                    <GraduationCap className="h-8 w-8 text-white" />
+                                </div>
+                            </div>
+                            <div className="relative z-10">
+                                <h3 className="text-2xl font-black text-white mb-1">
+                                    Curriculum
+                                </h3>
+                                <p className="text-sm text-indigo-100 font-medium">Manage Subjects</p>
+                            </div>
+                        </div>
+                    </Link>
+                </div>
+
+                {/* Analytics Section */}
+                <div className="glass-card p-6 mb-8">
+                    <h2 className="text-xl font-bold text-white mb-6 flex items-center space-x-2">
+                        <TrendingUp className="h-5 w-5 text-purple-400" />
+                        <span>Behavior Analytics</span>
+                    </h2>
+                    <AnalyticsDashboard />
+                </div>
+
+                {/* Role Management */}
+                <div className="glass-card p-6 mb-8">
+                    <h2 className="text-xl font-bold text-white mb-6 flex items-center space-x-2">
+                        <ShieldCheck className="h-5 w-5 text-emerald-400" />
+                        <span>Role Management (Whitelist)</span>
+                    </h2>
+                    <UserRoleManager />
                 </div>
 
                 {/* Charts Row */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                     {/* Resources by Type */}
-                    <div className="bg-white rounded-xl shadow-lg p-6">
-                        <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center space-x-2">
-                            <BarChart3 className="h-5 w-5 text-blue-600" />
+                    <div className="glass-card p-6">
+                        <h2 className="text-xl font-bold text-white mb-6 flex items-center space-x-2">
+                            <BarChart3 className="h-5 w-5 text-cyan-400" />
                             <span>Resources by Document Type</span>
                         </h2>
-                        <div className="space-y-3">
+                        <div className="space-y-4">
                             {Object.entries(stats.resourcesByType)
                                 .sort(([, a], [, b]) => b - a)
                                 .slice(0, 6)
@@ -119,13 +166,13 @@ export default async function AdminDashboardPage() {
                                     const percentage = (count / stats.totalResources) * 100;
                                     return (
                                         <div key={type}>
-                                            <div className="flex justify-between text-sm mb-1">
-                                                <span className="text-gray-700 font-medium">{type}</span>
-                                                <span className="text-gray-900 font-bold">{count}</span>
+                                            <div className="flex justify-between text-sm mb-2">
+                                                <span className="text-blue-200 font-medium">{type}</span>
+                                                <span className="text-white font-bold">{count}</span>
                                             </div>
-                                            <div className="w-full bg-gray-200 rounded-full h-2">
+                                            <div className="w-full bg-blue-900/40 rounded-full h-2">
                                                 <div
-                                                    className="bg-blue-600 h-2 rounded-full transition-all duration-500"
+                                                    className="bg-gradient-to-r from-cyan-400 to-blue-500 h-2 rounded-full transition-all duration-500 shadow-[0_0_10px_rgba(34,211,238,0.5)]"
                                                     style={{ width: `${percentage}%` }}
                                                 />
                                             </div>
@@ -136,25 +183,25 @@ export default async function AdminDashboardPage() {
                     </div>
 
                     {/* Resources by Regulation */}
-                    <div className="bg-white rounded-xl shadow-lg p-6">
-                        <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center space-x-2">
-                            <BarChart3 className="h-5 w-5 text-green-600" />
+                    <div className="glass-card p-6">
+                        <h2 className="text-xl font-bold text-white mb-6 flex items-center space-x-2">
+                            <BarChart3 className="h-5 w-5 text-emerald-400" />
                             <span>Resources by Regulation</span>
                         </h2>
-                        <div className="space-y-3">
+                        <div className="space-y-4">
                             {Object.entries(stats.resourcesByRegulation)
                                 .sort(([, a], [, b]) => b - a)
                                 .map(([regulation, count]) => {
                                     const percentage = (count / stats.totalResources) * 100;
                                     return (
                                         <div key={regulation}>
-                                            <div className="flex justify-between text-sm mb-1">
-                                                <span className="text-gray-700 font-medium">{regulation}</span>
-                                                <span className="text-gray-900 font-bold">{count}</span>
+                                            <div className="flex justify-between text-sm mb-2">
+                                                <span className="text-blue-200 font-medium">{regulation}</span>
+                                                <span className="text-white font-bold">{count}</span>
                                             </div>
-                                            <div className="w-full bg-gray-200 rounded-full h-2">
+                                            <div className="w-full bg-blue-900/40 rounded-full h-2">
                                                 <div
-                                                    className="bg-green-600 h-2 rounded-full transition-all duration-500"
+                                                    className="bg-gradient-to-r from-emerald-400 to-teal-500 h-2 rounded-full transition-all duration-500 shadow-[0_0_10px_rgba(52,211,153,0.5)]"
                                                     style={{ width: `${percentage}%` }}
                                                 />
                                             </div>
@@ -166,73 +213,77 @@ export default async function AdminDashboardPage() {
                 </div>
 
                 {/* Resources by Branch */}
-                <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
-                    <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center space-x-2">
-                        <BarChart3 className="h-5 w-5 text-purple-600" />
+                <div className="glass-card p-6 mb-8">
+                    <h2 className="text-xl font-bold text-white mb-6 flex items-center space-x-2">
+                        <BarChart3 className="h-5 w-5 text-purple-400" />
                         <span>Resources by Branch</span>
                     </h2>
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                         {Object.entries(stats.resourcesByBranch)
                             .sort(([, a], [, b]) => b - a)
                             .map(([branch, count]) => (
-                                <div key={branch} className="text-center p-4 bg-gray-50 rounded-lg">
-                                    <p className="text-2xl font-bold text-gray-900">{count}</p>
-                                    <p className="text-sm text-gray-600 mt-1">{getBranchLabel(branch)}</p>
+                                <div key={branch} className="text-center p-4 bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition-colors">
+                                    <p className="text-3xl font-black text-white mb-1">{count}</p>
+                                    <p className="text-xs text-blue-300 font-bold uppercase tracking-wider">{getBranchLabel(branch)}</p>
                                 </div>
                             ))}
                     </div>
                 </div>
 
                 {/* User Management */}
-                <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
-                    <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center space-x-2">
-                        <svg className="h-5 w-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                        </svg>
-                        <span>User Management</span>
+                <div className="glass-card p-6 mb-8">
+                    <h2 className="text-xl font-bold text-white mb-6 flex items-center space-x-2">
+                        <Users className="h-5 w-5 text-cyan-400" />
+                        <span>Registered Users</span>
                     </h2>
                     <UserManagementTable />
                 </div>
 
                 {/* Recent Uploads */}
-                <div className="bg-white rounded-xl shadow-lg p-6">
-                    <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center space-x-2">
-                        <Clock className="h-5 w-5 text-orange-600" />
+                <div className="glass-card p-6">
+                    <h2 className="text-xl font-bold text-white mb-6 flex items-center space-x-2">
+                        <Clock className="h-5 w-5 text-orange-400" />
                         <span>Recent Uploads</span>
                     </h2>
                     <div className="overflow-x-auto">
                         <table className="w-full">
                             <thead>
-                                <tr className="border-b border-gray-200">
-                                    <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">Title</th>
-                                    <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">Type</th>
-                                    <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">Regulation</th>
-                                    <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">Uploaded</th>
-                                    <th className="text-center py-3 px-4 text-sm font-semibold text-gray-700">Actions</th>
+                                <tr className="border-b border-blue-500/20">
+                                    <th className="text-left py-4 px-4 text-xs font-bold text-blue-300 uppercase tracking-wider">Title</th>
+                                    <th className="text-left py-4 px-4 text-xs font-bold text-blue-300 uppercase tracking-wider">Type</th>
+                                    <th className="text-left py-4 px-4 text-xs font-bold text-blue-300 uppercase tracking-wider">Regulation</th>
+                                    <th className="text-left py-4 px-4 text-xs font-bold text-blue-300 uppercase tracking-wider">Uploaded</th>
+                                    <th className="text-center py-4 px-4 text-xs font-bold text-blue-300 uppercase tracking-wider">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody className="divide-y divide-blue-500/10">
                                 {stats.recentResources.map((resource) => (
-                                    <tr key={resource.id} className="border-b border-gray-100 hover:bg-gray-50">
-                                        <td className="py-3 px-4 text-sm text-gray-900">{resource.title}</td>
-                                        <td className="py-3 px-4 text-sm text-gray-600">{resource.documentType}</td>
-                                        <td className="py-3 px-4 text-sm text-gray-600">{resource.regulation}</td>
-                                        <td className="py-3 px-4 text-sm text-gray-500">
-                                            {new Date(resource.uploadedAt).toISOString().split('T')[0]}
+                                    <tr key={resource.id} className="hover:bg-white/5 transition-colors">
+                                        <td className="py-4 px-4 text-sm text-white font-medium">{resource.title}</td>
+                                        <td className="py-4 px-4 text-sm text-blue-200">
+                                            <span className="bg-blue-500/20 text-blue-300 px-2 py-1 rounded-lg text-xs font-bold border border-blue-500/30">
+                                                {resource.documentType}
+                                            </span>
                                         </td>
-                                        <td className="py-3 px-4">
+                                        <td className="py-4 px-4 text-sm text-blue-200">{resource.regulation}</td>
+                                        <td className="py-4 px-4 text-sm text-blue-200">
+                                            {new Date(resource.uploadedAt).toLocaleString().split(',')[0]}
+                                        </td>
+                                        <td className="py-4 px-4">
                                             <div className="flex items-center justify-center space-x-2">
                                                 <a
                                                     href={resource.fileUrl}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className="p-1.5 text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                                                    className="p-2 text-cyan-400 hover:bg-cyan-400/10 rounded-lg transition-colors"
                                                     title="View"
                                                 >
-                                                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                                    </svg>
+                                                    <div className="h-4 w-4">
+                                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                        </svg>
+                                                    </div>
                                                 </a>
                                                 <DeleteButton resourceId={resource.id} />
                                             </div>

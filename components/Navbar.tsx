@@ -45,7 +45,7 @@ export default function Navbar() {
                     </div>
 
                     {/* Desktop Navigation */}
-                    <div className="hidden md:flex items-center space-x-6">
+                    <div className="hidden md:flex items-center space-x-1">
                         <Link
                             href="/"
                             className="text-white text-sm font-medium hover:text-orange-300 transition-colors duration-200 px-3 py-1.5 rounded-md hover:bg-blue-500"
@@ -56,42 +56,63 @@ export default function Navbar() {
                         {isSignedIn ? (
                             <>
                                 <Link
-                                    href="/dashboard"
-                                    className="text-white text-sm font-medium hover:text-orange-300 transition-colors duration-200 px-3 py-1.5 rounded-md hover:bg-blue-500"
+                                    href="/resources"
+                                    className="text-white text-sm font-medium hover:text-orange-300 transition-colors duration-200 px-2 py-1.5 rounded-md hover:bg-blue-500"
                                 >
                                     Resources
                                 </Link>
                                 <Link
-                                    href="/profile"
-                                    className="text-white text-sm font-medium hover:text-orange-300 transition-colors duration-200 px-3 py-1.5 rounded-md hover:bg-blue-500"
+                                    href="/projects"
+                                    className="text-white text-sm font-medium hover:text-orange-300 transition-colors duration-200 px-2 py-1.5 rounded-md hover:bg-blue-500"
                                 >
-                                    Profile
+                                    Projects
                                 </Link>
+
                                 {userRole === 'admin' && (
                                     <>
                                         <Link
-                                            href="/admin/dashboard"
-                                            className="text-white text-sm font-medium hover:text-orange-300 transition-colors duration-200 px-3 py-1.5 rounded-md hover:bg-blue-500"
+                                            href="/admin/curriculum"
+                                            className="text-white text-sm font-medium hover:text-orange-300 transition-colors duration-200 px-2 py-1.5 rounded-md hover:bg-blue-500"
                                         >
-                                            Admin Dashboard
+                                            Curriculum
+                                        </Link>
+                                        <Link
+                                            href="/admin/dashboard"
+                                            className="text-white text-sm font-medium hover:text-orange-300 transition-colors duration-200 px-2 py-1.5 rounded-md hover:bg-blue-500"
+                                        >
+                                            Dashboard
                                         </Link>
                                         <Link
                                             href="/admin/upload"
-                                            className="text-white text-sm font-medium hover:text-orange-300 transition-colors duration-200 px-3 py-1.5 rounded-md hover:bg-blue-500"
+                                            className="text-white text-sm font-medium hover:text-orange-300 transition-colors duration-200 px-2 py-1.5 rounded-md hover:bg-blue-500"
                                         >
                                             Upload
                                         </Link>
                                     </>
                                 )}
-                                <div className="flex items-center space-x-3">
-                                    <div className="flex items-center space-x-2 bg-blue-500 px-3 py-1.5 rounded-lg">
-                                        <User className="h-4 w-4 text-white" />
-                                        <span className="text-white text-xs font-medium">
+
+                                <Link
+                                    href="/profile"
+                                    className="text-white text-sm font-medium hover:text-orange-300 transition-colors duration-200 px-2 py-1.5 rounded-md hover:bg-blue-500"
+                                >
+                                    Profile
+                                </Link>
+                                <Link
+                                    href="/settings"
+                                    className="text-white text-sm font-medium hover:text-orange-300 transition-colors duration-200 px-2 py-1.5 rounded-md hover:bg-blue-500"
+                                >
+                                    Settings
+                                </Link>
+
+                                <div className="flex items-center space-x-2 ml-1">
+                                    <div className="flex items-center space-x-1.5 bg-blue-500 px-2 py-1 rounded-lg">
+                                        <User className="h-3.5 w-3.5 text-white" />
+                                        <span className="text-white text-xs font-medium truncate max-w-[100px]">
                                             {user?.emailAddresses[0]?.emailAddress || 'User'}
                                         </span>
                                     </div>
                                     <SignOutButton>
-                                        <button className="bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-4 py-1.5 rounded-lg shadow-md transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
+                                        <button className="bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-3 py-1.5 rounded-lg shadow-md transition-all duration-300 transform hover:scale-105 hover:shadow-lg whitespace-nowrap">
                                             Sign Out
                                         </button>
                                     </SignOutButton>
@@ -106,75 +127,12 @@ export default function Navbar() {
                         )}
                     </div>
 
-                    {/* Mobile Menu Button - Hidden to prefer Bottom Nav */}
-                    <div className="hidden">
-                        <button
-                            onClick={toggleMenu}
-                            className="text-white p-2 rounded-md hover:bg-blue-500 transition-colors duration-200"
-                            aria-label="Toggle menu"
-                        >
-                            {isMenuOpen ? (
-                                <X className="h-6 w-6" />
-                            ) : (
-                                <Menu className="h-6 w-6" />
-                            )}
-                        </button>
-                    </div>
                 </div>
             </div>
 
-            {/* Mobile Menu */}
-            {isMenuOpen && (
-                <div className="md:hidden bg-blue-700 border-t border-blue-500">
-                    <div className="px-4 pt-2 pb-4 space-y-3">
-                        <Link
-                            href="/"
-                            className="block text-white font-medium hover:text-orange-300 transition-colors duration-200 px-3 py-2 rounded-md hover:bg-blue-600"
-                            onClick={toggleMenu}
-                        >
-                            Home
-                        </Link>
-
-                        {isSignedIn ? (
-                            <>
-                                <Link
-                                    href="/dashboard"
-                                    className="block text-white font-medium hover:text-orange-300 transition-colors duration-200 px-3 py-2 rounded-md hover:bg-blue-600"
-                                    onClick={toggleMenu}
-                                >
-                                    Dashboard
-                                </Link>
-                                {userRole === 'admin' && (
-                                    <Link
-                                        href="/admin/upload"
-                                        className="block text-white font-medium hover:text-orange-300 transition-colors duration-200 px-3 py-2 rounded-md hover:bg-blue-600"
-                                        onClick={toggleMenu}
-                                    >
-                                        Admin Upload
-                                    </Link>
-                                )}
-                                <div className="bg-blue-600 px-3 py-2 rounded-lg flex items-center space-x-2">
-                                    <User className="h-4 w-4 text-white" />
-                                    <span className="text-white text-sm">
-                                        {user?.emailAddresses[0]?.emailAddress || 'User'}
-                                    </span>
-                                </div>
-                                <SignOutButton>
-                                    <button className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6 py-2 rounded-lg shadow-md transition-all duration-300">
-                                        Sign Out
-                                    </button>
-                                </SignOutButton>
-                            </>
-                        ) : (
-                            <SignInButton mode="modal">
-                                <button className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6 py-2 rounded-lg shadow-md transition-all duration-300">
-                                    Sign In
-                                </button>
-                            </SignInButton>
-                        )}
-                    </div>
-                </div>
-            )}
+            {/* Mobile Menu - Completely removed/hidden as we use BottomNav */}
+            {/* {isMenuOpen && ( ... )} */}
         </nav>
     );
 }
+// Mobile menu removed in favor of BottomNav
