@@ -26,7 +26,7 @@ export default function BottomNav() {
 
     return (
         <div className="md:hidden fixed bottom-0 left-0 right-0 bg-[#0A1628]/95 backdrop-blur-lg border-t border-white/10 pb-safe z-50">
-            <div className="grid grid-cols-5 h-16 items-center px-2">
+            <div className="grid grid-cols-4 h-16 items-center px-2">
                 {/* Home */}
                 <Link
                     href="/"
@@ -52,15 +52,6 @@ export default function BottomNav() {
                 >
                     <Rocket size={20} className={isActive('/projects') ? 'fill-cyan-400/20' : ''} />
                     <span className="text-[10px] font-medium">Projects</span>
-                </Link>
-
-                {/* Dashboard / Profile */}
-                <Link
-                    href="/dashboard"
-                    className={`flex flex-col items-center justify-center space-y-1 ${isActive('/dashboard') ? 'text-violet-400' : 'text-slate-400'}`}
-                >
-                    <LayoutDashboard size={20} className={isActive('/dashboard') ? 'fill-violet-400/20' : ''} />
-                    <span className="text-[10px] font-medium">Dash</span>
                 </Link>
 
                 {/* Admin or Menu */}
