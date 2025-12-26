@@ -24,7 +24,7 @@ export default function AwardsTab({ profile, isEditing }: AwardsTabProps) {
                                 <div className="absolute top-4 right-4 text-4xl opacity-20 group-hover:opacity-40 group-hover:scale-110 transition-all">🏆</div>
                                 <h4 className="text-2xl font-black text-white mb-2 relative z-10">{award.title}</h4>
                                 <p className="text-sm font-semibold text-amber-300 mb-1">🏅 {award.issuer}</p>
-                                <p className="text-xs text-blue-200 mb-3">📅 {new Date(award.date).toLocaleDateString()}</p>
+                                <p className="text-xs text-blue-200 mb-3">📅 {new Date(award.date).toISOString().split('T')[0]}</p>
                                 {award.description && (
                                     <p className="text-sm text-blue-100 leading-relaxed bg-white/5 p-3 rounded-lg">{award.description}</p>
                                 )}

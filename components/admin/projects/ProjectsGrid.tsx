@@ -155,7 +155,7 @@ export default function ProjectsGrid({ initialProjects }: ProjectsGridProps) {
                                 </div>
                                 <div className="flex items-center gap-2 text-blue-200">
                                     <Calendar className="h-4 w-4 text-emerald-400" />
-                                    <span>Due: <span className="text-white">{new Date(project.submissionDate).toLocaleDateString()}</span></span>
+                                    <span>Due: <span className="text-white">{new Date(project.submissionDate).toISOString().split('T')[0]}</span></span>
                                 </div>
                             </div>
 

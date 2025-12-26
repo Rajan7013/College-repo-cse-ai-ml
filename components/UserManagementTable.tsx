@@ -73,7 +73,7 @@ export default function UserManagementTable() {
                                     </span>
                                 </td>
                                 <td className="py-4 px-4 text-sm text-blue-200">
-                                    {new Date(userData.createdAt).toLocaleDateString()}
+                                    {new Date(userData.createdAt).toISOString().split('T')[0]}
                                 </td>
                                 <td className="py-4 px-4">
                                     <UserActions

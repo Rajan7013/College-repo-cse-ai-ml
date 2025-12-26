@@ -30,6 +30,7 @@ export default function SubjectForm({ initialData }: SubjectFormProps) {
     const [code, setCode] = useState(initialData?.code || '');
     const [name, setName] = useState(initialData?.name || '');
     const [branch, setBranch] = useState(initialData?.branch || 'Connect');
+    const [subjectType, setSubjectType] = useState<'theory' | 'lab'>(initialData?.type || 'theory');
 
     // Units
     const [units, setUnits] = useState<UnitInput[]>([]);
@@ -200,6 +201,7 @@ export default function SubjectForm({ initialData }: SubjectFormProps) {
                 year: parseInt(year),
                 semester: parseInt(semester),
                 branch,
+                type: subjectType,
                 units: unitsMap,
                 textbooks: texts,
                 references: refs,
@@ -334,6 +336,26 @@ export default function SubjectForm({ initialData }: SubjectFormProps) {
                                 disabled={isEditMode}
                             />
                         </div>
+                    </div>
+
+                    {/* Subject Type Selector */}
+                    <div className="mt-6 pt-6 border-t border-white/10">
+                        <label htmlFor="subjectType" className={labelClasses}>Subject Type</label>
+                        <div className="relative">
+                            <select
+                                id="subjectType"
+                                name="subjectType"
+                                value={subjectType}
+                                onChange={e => setSubjectType(e.target.value as 'theory' | 'lab')}
+                                className={`${inputClasses} appearance-none cursor-pointer`}
+                            >
+                                <option value="theory" className="bg-[#0f172a]">Theory Subject (Units)</option>
+                                <option value="lab" className="bg-[#0f172a]">Lab Subject (Weeks)</option>
+                            </select>
+                        </div>
+                        <p className="text-xs text-blue-300/60 mt-2">
+                            {subjectType === 'lab' ? '📅 Lab subjects use "Week 1, Week 2..." instead of units' : '📚 Theory subjects use "Unit 1, Unit 2..."'}
+                        </p>
                     </div>
                 </div>
 

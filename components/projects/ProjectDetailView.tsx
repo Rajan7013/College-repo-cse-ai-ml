@@ -84,7 +84,7 @@ export default function ProjectDetailView({ project, teams, forms }: ProjectDeta
                             <div className="flex flex-wrap gap-4 text-white">
                                 <div className="glass-card px-4 py-2 flex items-center gap-2">
                                     <Calendar className="h-5 w-5 text-cyan-400" />
-                                    <span className="font-semibold">Deadline: {new Date(project.submissionDate).toLocaleDateString()}</span>
+                                    <span className="font-semibold">Deadline: {new Date(project.submissionDate).toISOString().split('T')[0]}</span>
                                 </div>
                                 <div className="glass-card px-4 py-2 flex items-center gap-2">
                                     <Users className="h-5 w-5 text-cyan-400" />
@@ -144,8 +144,8 @@ export default function ProjectDetailView({ project, teams, forms }: ProjectDeta
                                         key={tab.id}
                                         onClick={() => setActiveTab(tab.id)}
                                         className={`px-6 py-3 rounded-xl font-bold text-sm transition-all flex items-center gap-2 whitespace-nowrap border ${isActive
-                                                ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white border-transparent shadow-lg scale-105'
-                                                : 'glass-card text-blue-200 hover:text-white hover:bg-white/10 border-blue-500/10'
+                                            ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white border-transparent shadow-lg scale-105'
+                                            : 'glass-card text-blue-200 hover:text-white hover:bg-white/10 border-blue-500/10'
                                             }`}
                                     >
                                         <Icon className={`h-4 w-4 ${isActive ? 'text-white' : 'text-cyan-400'}`} />
@@ -434,19 +434,19 @@ export default function ProjectDetailView({ project, teams, forms }: ProjectDeta
                                 <div className="bg-white/5 p-3 rounded-xl">
                                     <p className="text-xs font-bold text-blue-300 uppercase mb-1">Registration Start</p>
                                     <p className="text-white font-bold">
-                                        {new Date(project.registrationStartDate).toLocaleDateString()}
+                                        {new Date(project.registrationStartDate).toISOString().split('T')[0]}
                                     </p>
                                 </div>
                                 <div className="bg-white/5 p-3 rounded-xl">
                                     <p className="text-xs font-bold text-blue-300 uppercase mb-1">Registration End</p>
                                     <p className="text-white font-bold">
-                                        {new Date(project.registrationEndDate).toLocaleDateString()}
+                                        {new Date(project.registrationEndDate).toISOString().split('T')[0]}
                                     </p>
                                 </div>
                                 <div className="bg-rose-500/10 border border-rose-500/30 p-3 rounded-xl">
                                     <p className="text-xs font-bold text-rose-300 uppercase mb-1">Submission Deadline</p>
                                     <p className="text-white font-bold">
-                                        {new Date(project.submissionDate).toLocaleDateString()}
+                                        {new Date(project.submissionDate).toISOString().split('T')[0]}
                                     </p>
                                 </div>
                             </div>

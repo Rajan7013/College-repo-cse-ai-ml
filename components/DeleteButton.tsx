@@ -18,7 +18,8 @@ export default function DeleteButton({ resourceId }: { resourceId: string }) {
         const result = await deleteResource(resourceId);
 
         if (result.success) {
-            router.refresh();
+            // Navigate back to dashboard after successful deletion
+            router.push('/admin/dashboard');
         } else {
             alert(result.message);
             setDeleting(false);

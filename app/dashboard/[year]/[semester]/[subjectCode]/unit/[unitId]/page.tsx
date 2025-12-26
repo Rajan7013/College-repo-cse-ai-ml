@@ -119,7 +119,7 @@ export default async function UnitDetailPage({
                                                     </span>
                                                     <span className="text-xs text-blue-400/50">•</span>
                                                     <span className="text-xs text-blue-400/50">
-                                                        {new Date(res.uploadedAt).toLocaleDateString()}
+                                                        {new Date(res.uploadedAt).toISOString().split('T')[0]}
                                                     </span>
                                                 </div>
                                                 <h4 className="text-white font-bold truncate group-hover:text-cyan-300 transition-colors">

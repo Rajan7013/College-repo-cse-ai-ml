@@ -41,7 +41,7 @@ export default function PersonalTab({ profile, isEditing }: PersonalTabProps) {
             <div className="space-y-6">
                 {[
                     { label: 'Full Name', value: profile?.fullName || '-', icon: '👤' },
-                    { label: 'Date of Birth', value: profile?.dateOfBirth ? new Date(profile.dateOfBirth).toLocaleDateString() : '-', icon: '🎂' },
+                    { label: 'Date of Birth', value: profile?.dateOfBirth ? new Date(profile.dateOfBirth).toISOString().split('T')[0] : '-', icon: '🎂' },
                     { label: 'Gender', value: profile?.gender || '-', icon: '⚧' },
                 ].map((item, idx) => (
                     <div key={idx} className="group relative bg-white/5 backdrop-blur-sm rounded-xl p-5 border border-blue-400/10 hover:border-blue-400/30 hover:bg-white/10 transition-all duration-300">

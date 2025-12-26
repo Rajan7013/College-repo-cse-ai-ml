@@ -23,6 +23,7 @@ export interface Subject {
     year: number;
     semester: number;
     branch: string; // 'CSE', 'ECE', 'Common', etc.
+    type?: 'theory' | 'lab'; // NEW: Subject type (defaults to 'theory' for backward compatibility)
     units: SubjectUnits;
     textbooks: string[];
     references: string[];

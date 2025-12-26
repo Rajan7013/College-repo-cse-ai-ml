@@ -201,7 +201,7 @@ function DocumentListContent({ year, semester, subjectCode, unit }: { year: stri
                                 <div className="text-sm text-blue-300 mb-6 space-y-1">
                                     <div className="flex items-center gap-2">
                                         <div className="w-1 h-1 rounded-full bg-blue-400"></div>
-                                        Uploaded: {new Date(resource.uploadedAt).toLocaleDateString()}
+                                        Uploaded: {new Date(resource.uploadedAt).toISOString().split('T')[0]}
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <div className="w-1 h-1 rounded-full bg-blue-400"></div>

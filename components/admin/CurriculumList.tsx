@@ -281,7 +281,7 @@ export default function CurriculumList({ initialSubjects }: CurriculumListProps)
                                         <td className="px-6 py-5 text-center">
                                             <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/5 border border-white/10 text-blue-200 rounded-full text-xs font-bold">
                                                 <Layers className="h-3 w-3" />
-                                                {Object.keys(sub.units || {}).length}
+                                                {Object.keys(sub.units || {}).length} {sub.type === 'lab' ? 'Weeks' : 'Units'}
                                             </div>
                                         </td>
                                         <td className="px-6 py-5 text-right">

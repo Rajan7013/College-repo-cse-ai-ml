@@ -4,6 +4,13 @@ import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 const isProtectedRoute = createRouteMatcher([
     '/dashboard(.*)',
     '/admin(.*)',
+    '/search(.*)',      // Protect search page
+    '/library(.*)',     // Protect library page (if exists)
+    '/resources(.*)',   // Protect resource viewing
+    '/viewer(.*)',      // Protect PDF viewer
+    '/projects(.*)',    // Protect projects page
+    '/profile(.*)',     // Protect profile page
+    '/settings(.*)',    // Protect settings page
 ]);
 
 export default clerkMiddleware(async (auth, req) => {
