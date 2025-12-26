@@ -273,7 +273,7 @@ export default async function AdminDashboardPage() {
                                         </td>
                                         <td className="py-4 px-4 text-sm text-blue-200">{resource.regulation}</td>
                                         <td className="py-4 px-4 text-sm text-blue-200">
-                                            {new Date(resource.uploadedAt).toLocaleString().split(',')[0]}
+                                            {new Date(resource.uploadedAt).toISOString().split('T')[0]}
                                         </td>
                                         <td className="py-4 px-4">
                                             <div className="flex items-center justify-center space-x-2">

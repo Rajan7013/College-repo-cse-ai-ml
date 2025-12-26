@@ -2,7 +2,7 @@ export default function TermsPage() {
     return (
         <div className="prose-invert max-w-none">
             <h2 className="text-3xl font-black text-white mb-4">Terms of Service</h2>
-            <p className="text-blue-200 mb-8">Last updated: {new Date().toLocaleDateString()}</p>
+            <p className="text-blue-200 mb-8">Last updated: 2024-12-26</p>
 
             <div className="space-y-6 text-blue-100">
                 <section className="glass-card p-6 hover:bg-white/10 transition-all">
