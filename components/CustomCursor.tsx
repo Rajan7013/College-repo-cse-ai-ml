@@ -30,7 +30,6 @@ export default function CustomCursor() {
     const colors = ['#3B82F6', '#8B5CF6', '#10B981', '#06B6D4', '#EC4899'];
 
     useEffect(() => {
-        let particleInterval: NodeJS.Timeout;
 
         const updateCursor = (e: MouseEvent) => {
             setPosition({ x: e.clientX, y: e.clientY });
@@ -125,7 +124,6 @@ export default function CustomCursor() {
             window.removeEventListener('mouseup', handleMouseUp);
             document.body.removeEventListener('mouseenter', handleMouseEnter);
             document.body.removeEventListener('mouseleave', handleMouseLeave);
-            if (particleInterval) clearInterval(particleInterval);
         };
     }, []);
 
