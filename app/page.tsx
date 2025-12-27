@@ -8,6 +8,8 @@ import { useState, useEffect } from 'react';
 import Footer from '@/components/Footer';
 import { getHomeStats, type HomeStats } from '@/lib/actions/stats';
 import { useRouter } from 'next/navigation';
+import AnimatedCounter from '@/components/AnimatedCounter';
+import CustomCursor from '@/components/CustomCursor';
 
 export default function Home() {
   const { user, isLoaded } = useUser();
@@ -50,6 +52,8 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-[#020617] overflow-x-hidden selection:bg-blue-500/30">
+      {/* Custom Cursor */}
+      <CustomCursor />
 
       {/* Background Ambience */}
       <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
@@ -103,85 +107,39 @@ export default function Home() {
 
           {/* Buttons */}
           <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center items-center mb-8 md:mb-12 animate-fade-in-up animation-delay-400 w-full sm:w-auto px-4 sm:px-0">
-            {user ? (
-              <>
-                <Link href="/projects" className="w-full sm:w-auto">
-                  <button className="w-full sm:min-w-[180px] px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl shadow-[0_0_15px_rgba(37,99,235,0.3)] hover:shadow-[0_0_25px_rgba(37,99,235,0.5)] transition-all duration-300 flex items-center justify-center gap-2 text-sm md:text-base">
-                    <Rocket className="h-4 w-4 md:h-5 md:w-5" />
-                    <span>Explore Projects</span>
-                  </button>
-                </Link>
-              </>
-            ) : (
-              <>
-                <SignInButton mode="modal">
-                  <button className="group w-full sm:w-auto sm:min-w-[160px] px-6 py-3 bg-white text-blue-950 font-bold rounded-xl shadow-[0_0_15px_rgba(255,255,255,0.2)] hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 text-sm md:text-base">
-                    <span>Get Started</span>
-                    <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                  </button>
-                </SignInButton>
-                <Link href="#features" className="w-full sm:w-auto">
-                  <button className="w-full sm:min-w-[140px] px-6 py-3 text-blue-200 hover:text-white font-medium transition-colors flex items-center justify-center gap-2 text-sm md:text-base">
-                    <span>Learn More</span>
-                    <ArrowRight className="h-4 w-4" />
-                  </button>
-                </Link>
-              </>
+            {!user && (
+              <SignInButton mode="modal">
+                <button className="group w-full sm:w-auto sm:min-w-[180px] px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold rounded-xl shadow-[0_0_20px_rgba(79,70,229,0.4)] hover:shadow-[0_0_30px_rgba(79,70,229,0.6)] hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 text-sm md:text-base">
+                  <span>Get Started Free</span>
+                  <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                </button>
+              </SignInButton>
             )}
           </div>
 
-          {/* Stats integrated - Improved Grid */}
+          {/* Stats integrated - Improved Grid with Animations */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 max-w-4xl mx-auto border-t border-white/5 pt-6 md:pt-8 animate-fade-in-up animation-delay-400">
             {[
-              { label: 'Active Students', value: `${stats.totalStudents}+`, icon: Users },
-              { label: 'Resources', value: `${stats.totalResources}+`, icon: FileText },
-              { label: 'Projects', value: `${stats.totalProjects}+`, icon: Rocket },
-              { label: 'Uptime', value: stats.uptime, icon: Zap },
+              { label: 'Active Students', value: stats.totalStudents, suffix: '+', icon: Users, color: 'text-blue-400' },
+              { label: 'Resources', value: stats.totalResources, suffix: '+', icon: FileText, color: 'text-emerald-400' },
+              { label: 'Projects', value: stats.totalProjects, suffix: '+', icon: Rocket, color: 'text-purple-400' },
+              { label: 'Uptime', value: 99.9, suffix: '%', icon: Zap, color: 'text-cyan-400', decimals: 1 },
             ].map((stat, i) => (
-              <div key={i} className="text-center group hover:bg-white/5 p-3 rounded-2xl transition-colors">
-                <div className="flex items-center justify-center mb-2 text-blue-400 group-hover:scale-110 transition-transform">
+              <div key={i} className="text-center group hover:bg-white/5 p-3 rounded-2xl transition-all duration-300 hover:scale-105">
+                <div className={`flex items-center justify-center mb-2 ${stat.color} group-hover:scale-110 transition-transform duration-300`}>
                   <stat.icon className="h-5 w-5 md:h-6 md:w-6" />
                 </div>
-                <div className="text-xl md:text-2xl lg:text-3xl font-black text-white mb-1 leading-none">{stat.value}</div>
+                <div className="text-xl md:text-2xl lg:text-3xl font-black text-white mb-1 leading-none">
+                  <AnimatedCounter
+                    end={stat.value}
+                    suffix={stat.suffix}
+                    decimals={stat.decimals || 0}
+                    duration={2500}
+                  />
+                </div>
                 <div className="text-[10px] md:text-xs text-blue-300/60 uppercase tracking-widest font-medium leading-none mt-1">{stat.label}</div>
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Features Bento Grid - Dynamic Resizing */}
-      <section id="features" className="relative z-10 py-12 md:py-16 px-4 sm:px-6 lg:px-8 bg-blue-950/20 backdrop-blur-sm border-t border-white/5">
-        <div className="max-w-[1400px] mx-auto">
-          <div className="text-center mb-10 md:mb-16">
-            <h2 className="text-blue-400 font-bold tracking-[0.2em] text-xs md:text-sm uppercase mb-2">Powering Ambition</h2>
-            <h3 className="text-2xl md:text-3xl lg:text-4xl font-black text-white mb-4">Designed for Excellence</h3>
-            <p className="max-w-xl mx-auto text-blue-200/60 text-sm md:text-base">A suite of powerful tools built to enhance every aspect of your academic journey.</p>
-          </div>
-
-          <div className="max-w-md mx-auto">
-            {/* Feature 1: Resources */}
-            <Link href="/resources" className="block">
-              <div className="glass-card p-6 md:p-8 flex flex-col justify-between overflow-hidden relative group h-full min-h-[280px] hover:scale-[1.02] transition-transform duration-300 cursor-pointer">
-                <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500/10 rounded-full blur-[40px] -mr-8 -mt-8 transition-all group-hover:bg-blue-500/20"></div>
-                <div className="relative z-10 flex flex-col h-full justify-between">
-                  <div>
-                    <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center mb-6 text-blue-400 group-hover:scale-110 transition-transform duration-500">
-                      <BookOpen className="h-6 w-6" />
-                    </div>
-                    <h4 className="text-xl font-bold text-white mb-3">Resource Library</h4>
-                    <p className="text-blue-200/70 text-sm leading-relaxed">Access lecture notes, previous papers, and lab manuals organized by Branch and Year.</p>
-                  </div>
-                  <div className="flex items-center gap-1.5 text-blue-400 text-sm font-semibold mt-6 group-hover:gap-2.5 transition-custom">
-                    <span>View Library</span>
-                    <ArrowRight className="h-4 w-4" />
-                  </div>
-                </div>
-              </div>
-            </Link>
-
-
-
           </div>
         </div>
       </section>
@@ -261,6 +219,6 @@ export default function Home() {
       <div className="mb-4"></div>
 
       <Footer />
-    </div>
+    </div >
   );
 }

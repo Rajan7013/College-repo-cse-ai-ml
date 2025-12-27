@@ -6,17 +6,23 @@ interface AnimatedCounterProps {
     end: number;
     duration?: number;
     suffix?: string;
+    decimals?: number;
 }
 
-export default function AnimatedCounter({ end, duration = 2000, suffix = '' }: AnimatedCounterProps) {
+export default function AnimatedCounter({
+    end,
+    duration = 2000,
+    suffix = '',
+    decimals = 0
+}: AnimatedCounterProps) {
     const [count, setCount] = useState(0);
     const [isVisible, setIsVisible] = useState(false);
-    const counterRef = useRef<HTMLSpanElement>(null);
+    const counterRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const observer = new IntersectionObserver(
-            (entries) => {
-                if (entries[0].isIntersecting && !isVisible) {
+            ([entry]) => {
+                if (entry.isIntersecting && !isVisible) {
                     setIsVisible(true);
                 }
             },
@@ -42,21 +48,32 @@ export default function AnimatedCounter({ end, duration = 2000, suffix = '' }: A
 
             // Easing function for smooth animation
             const easeOutQuart = 1 - Math.pow(1 - progress, 4);
-            setCount(Math.floor(easeOutQuart * end));
+            const currentCount = Math.floor(easeOutQuart * end);
+
+            setCount(currentCount);
 
             if (progress < 1) {
                 animationFrame = requestAnimationFrame(animate);
+            } else {
+                setCount(end);
             }
         };
 
         animationFrame = requestAnimationFrame(animate);
 
         return () => cancelAnimationFrame(animationFrame);
-    }, [isVisible, end, duration]);
+    }, [end, duration, isVisible]);
+
+    const formatNumber = (num: number) => {
+        if (decimals > 0) {
+            return num.toFixed(decimals);
+        }
+        return num.toString();
+    };
 
     return (
-        <span ref={counterRef}>
-            {count.toLocaleString()}{suffix}
-        </span>
+        <div ref={counterRef} className="inline-block">
+            {formatNumber(count)}{suffix}
+        </div>
     );
 }
