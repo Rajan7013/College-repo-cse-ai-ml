@@ -6,15 +6,20 @@ import { ArrowLeft, Download } from 'lucide-react';
 
 interface ViewerPageProps {
     params: Promise<{ id: string }>;
+    searchParams: Promise<{ returnUrl?: string }>;
 }
 
-export default async function ViewerPage({ params }: ViewerPageProps) {
+export default async function ViewerPage({ params, searchParams }: ViewerPageProps) {
     const { id } = await params;
+    const { returnUrl } = await searchParams;
     const resource = await getResourceById(id);
 
     if (!resource) {
         notFound();
     }
+
+    // Use returnUrl if provided, otherwise default to /resources
+    const backUrl = returnUrl || '/resources';
 
     return (
         <div className="h-screen flex flex-col overflow-hidden">
@@ -22,9 +27,9 @@ export default async function ViewerPage({ params }: ViewerPageProps) {
             <div className="glass-card rounded-none border-x-0 border-t-0 border-b border-blue-400/30 px-4 py-3 flex items-center justify-between z-50 bg-[#0A1628]/90 backdrop-blur-md">
                 <div className="flex items-center space-x-4 flex-1 min-w-0">
                     <Link
-                        href="/resources"
+                        href={backUrl}
                         className="p-2 hover:bg-white/10 rounded-xl transition-colors flex-shrink-0 group"
-                        title="Back to Resources"
+                        title="Back"
                     >
                         <ArrowLeft className="h-5 w-5 text-cyan-400 group-hover:-translate-x-1 transition-transform" />
                     </Link>

@@ -87,7 +87,7 @@ export default function DocumentCard({ resource }: DocumentCardProps) {
             {/* Actions */}
             <div className="p-4 bg-white/5 border-t border-white/10 flex gap-2">
                 <Link
-                    href={`/viewer/${resource.id}`}
+                    href={`/viewer/${resource.id}?returnUrl=/search`}
                     className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-lg transition-colors flex items-center justify-center gap-2 text-sm shadow-[0_0_10px_rgba(37,99,235,0.3)]"
                 >
                     <Eye className="h-4 w-4" />
