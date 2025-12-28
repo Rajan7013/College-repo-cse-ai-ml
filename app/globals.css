@@ -171,6 +171,23 @@ body {
   animation: float 3s ease-in-out infinite;
 }
 
+@keyframes float-delayed {
+
+  0%,
+  100% {
+    transform: translateY(0px) translateX(0px);
+  }
+
+  50% {
+    transform: translateY(-15px) translateX(10px);
+  }
+}
+
+.animate-float-delayed {
+  animation: float-delayed 4s ease-in-out infinite;
+  animation-delay: 1s;
+}
+
 @keyframes blob {
 
   0%,
