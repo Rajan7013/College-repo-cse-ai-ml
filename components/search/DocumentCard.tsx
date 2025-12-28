@@ -1,15 +1,19 @@
 'use client';
 
 import { Resource } from '@/lib/actions/resources';
-import { FileText, Download, Eye, Calendar, HardDrive } from 'lucide-react';
+import { FileText, Download, Eye, Calendar, HardDrive, Loader2 } from 'lucide-react';
 import { formatBytes, formatDate } from '@/lib/utils';
 import Link from 'next/link';
+import { getSecureDownloadUrl } from '@/lib/actions/secure-download';
+import { useState } from 'react';
 
 interface DocumentCardProps {
     resource: Resource;
 }
 
 export default function DocumentCard({ resource }: DocumentCardProps) {
+    const [downloading, setDownloading] = useState(false);
+
     const getFileIcon = (fileType?: string) => {
         if (!fileType) return <FileText className="h-8 w-8 text-slate-500" />;
 
@@ -93,16 +97,30 @@ export default function DocumentCard({ resource }: DocumentCardProps) {
                     <Eye className="h-4 w-4" />
                     View
                 </Link>
-                <a
-                    href={resource.fileUrl}
-                    download
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-4 py-2 bg-white/5 hover:bg-white/10 text-blue-100 font-semibold rounded-lg border border-white/10 transition-colors flex items-center gap-2 text-sm"
+                <button
+                    onClick={async () => {
+                        try {
+                            setDownloading(true);
+                            const fileKey = resource.fileUrl.split('/').pop() || '';
+                            const signedUrl = await getSecureDownloadUrl(fileKey);
+                            window.open(signedUrl, '_blank');
+                        } catch (error) {
+                            console.error('Download failed:', error);
+                            alert('Download failed. Please make sure you are signed in and try again.');
+                        } finally {
+                            setDownloading(false);
+                        }
+                    }}
+                    disabled={downloading}
+                    className="px-4 py-2 bg-white/5 hover:bg-white/10 text-blue-100 font-semibold rounded-lg border border-white/10 transition-colors flex items-center gap-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                    <Download className="h-4 w-4" />
-                    Download
-                </a>
+                    {downloading ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                        <Download className="h-4 w-4" />
+                    )}
+                    {downloading ? 'Downloading...' : 'Download'}
+                </button>
             </div>
         </div>
     );
