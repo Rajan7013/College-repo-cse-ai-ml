@@ -209,17 +209,15 @@ function DocumentListContent({ year, semester, subjectCode, unit }: { year: stri
                                     </div>
                                 </div>
 
-                                <a
-                                    href={getViewUrl(resource)}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
+                                <Link
+                                    href={`/viewer/${resource.id}?returnUrl=${encodeURIComponent(`/resources/${year}/${semester}/${subjectCode}/${unit}?regulation=${regulation}`)}`}
                                     className="block w-full"
                                 >
                                     <button className="btn-gradient w-full py-2.5 px-4 rounded-xl font-bold shadow-lg flex items-center justify-center space-x-2 group/btn">
                                         <Eye className="h-4 w-4 group-hover/btn:scale-110 transition-transform" />
                                         <span>View Document</span>
                                     </button>
-                                </a>
+                                </Link>
                             </div>
                         ))}
                     </div>

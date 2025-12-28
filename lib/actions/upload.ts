@@ -15,6 +15,15 @@ export interface UploadResult {
     fileUrl?: string;
 }
 
+export type PresignedUrlResult = {
+    success: boolean;
+    uploadUrl?: string;
+    publicUrl?: string;  // DEPRECATED: Legacy public URL
+    fileKey?: string;    // NEW: File key for signed URLs
+    key?: string;        // DEPRECATED: Use fileKey instead
+    error?: string;
+};
+
 // Allowed file types
 const ALLOWED_MIME_TYPES = [
     'application/pdf',
@@ -96,7 +105,7 @@ export async function getAdminPresignedUrl(
     filename: string,
     contentType: string,
     size: number
-): Promise<{ success: boolean; uploadUrl?: string; publicUrl?: string; key?: string; error?: string }> {
+): Promise<PresignedUrlResult> {
     try {
         // 1. Check authentication & Admin Role
         const { userId } = await auth();
@@ -126,9 +135,10 @@ export async function getAdminPresignedUrl(
         });
 
         const uploadUrl = await getSignedUrl(r2Client, command, { expiresIn: 3600 });
-        const publicUrl = `${process.env.NEXT_PUBLIC_R2_PUBLIC_URL}/${key}`;
+        // DEPRECATED: publicUrl - keeping for backward compatibility
+        const publicUrl = process.env.NEXT_PUBLIC_R2_PUBLIC_URL ? `${process.env.NEXT_PUBLIC_R2_PUBLIC_URL}/${key}` : undefined;
 
-        return { success: true, uploadUrl, publicUrl, key };
+        return { success: true, uploadUrl, publicUrl, fileKey: key };
 
     } catch (error: any) {
         console.error('Presigned URL Error:', error);
@@ -150,7 +160,8 @@ export async function saveResourceMetadata(data: {
     unit: string | number;
     tags: string[];
     description: string;
-    fileUrl: string; // Provided by client after successful upload
+    fileUrl?: string; // DEPRECATED: Legacy public URL
+    fileKey?: string; // NEW: File key for signed URLs
     filename: string; // The R2 key or original filename
     fileType: string; // MIME type
     fileSize: number;
@@ -180,7 +191,8 @@ export async function saveResourceMetadata(data: {
             unit: data.unit,
             tags: data.tags,
             description: data.description || '',
-            fileUrl: data.fileUrl,
+            fileKey: data.fileKey,        // NEW: Store file key for signed URLs
+            fileUrl: data.fileUrl,        // DEPRECATED: Keep for backward compatibility
             filename: data.filename,
             fileType: generalFileType, // PDF, Image, etc.
             mimeType: data.fileType,

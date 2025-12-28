@@ -103,7 +103,7 @@ export default function AdminUploadPage() {
             // 1. Get Presigned URL
             const presigned = await getAdminPresignedUrl(selectedFile.name, selectedFile.type, selectedFile.size);
 
-            if (!presigned.success || !presigned.uploadUrl || !presigned.key || !presigned.publicUrl) {
+            if (!presigned.success || !presigned.uploadUrl || !presigned.fileKey) {
                 throw new Error(presigned.error || "Failed to initiate upload");
             }
 
@@ -145,8 +145,9 @@ export default function AdminUploadPage() {
                 unit: unitValue === 'all' ? 'all' : parseInt(unitValue),
                 tags,
                 description,
-                fileUrl: presigned.publicUrl,
-                filename: presigned.key,
+                fileKey: presigned.fileKey,      // NEW: Use fileKey for signed URLs
+                fileUrl: presigned.publicUrl,    // DEPRECATED: Keep for backward compatibility
+                filename: presigned.fileKey,     // Use fileKey as filename
                 fileType: selectedFile.type,
                 fileSize: selectedFile.size
             });

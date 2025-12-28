@@ -15,7 +15,8 @@ export interface Resource {
     unit: number | 'all';
     tags: string[];
     description: string;
-    fileUrl: string;
+    fileUrl: string;        // DEPRECATED: Legacy public URL
+    fileKey?: string;       // NEW: File key for signed URLs
     filename: string;
     fileType?: string;
     mimeType?: string;

@@ -59,12 +59,13 @@ export default function DocumentViewer({ resource }: DocumentViewerProps) {
 
     const fileType = resource.fileType?.toUpperCase();
     const fileUrl = resource.fileUrl;
+    const fileKey = resource.fileKey;  // NEW: Get fileKey for signed URLs
     const filename = resource.filename;
 
     // Route to appropriate custom viewer
     switch (fileType) {
         case 'PDF':
-            return <PDFViewer fileUrl={fileUrl} filename={filename} />;
+            return <PDFViewer fileUrl={fileUrl} fileKey={fileKey} filename={filename} />;
 
         case 'PPT':
             return <PPTViewer fileUrl={fileUrl} filename={filename} />;
